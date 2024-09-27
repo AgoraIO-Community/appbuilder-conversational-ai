@@ -1,33 +1,61 @@
-import {customize} from 'customization-api';
-/* Custom imports
-import NewCustomLayout from './pages/NewCustomLayout';
-import ChatBubble from './components/ChatBubble';
-*/
+import {
+	customize,
+	MaxVideoView,
+	useContent,
+	useLocalUid,
+	useRecording,
+	useRoomInfo,
+	UiKitMaxVideoView,
+} from "customization-api";
+import React, { useContext, useEffect, useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import FallbackLogo from "./components/FallbackLogo";
 
-const userCustomization = customize({
-  components: {
-    videoCall: {
-      
-      
-    },
-  },
-  // components: {
-  //   videoCall: {
-  // # Pass a function that returns an array of layout objects to override available layouts
-  //     customLayout: (defaultLayouts) => {
-  //       return [...defaultLayouts, {
-  //           label: 'Vertical',
-  //           name: 'vertical_pinned',
-  //           iconName: 'screenshare'
-  //           component: NewCustomLayout;
-  //         }];
-  //     },
-  // # Pass custom components here to override default components
-  //     componentOverrides: {
-  //        chatBubble: ChatBubble,
-  //     },
-  //   },
-  // },
+export interface WrapperInterface {
+	customKey1?: string;
+	customKey2?: string;
+}
+
+interface WrapperProviderProps {
+	children: React.ReactNode;
+}
+
+const WrapperProvider = (props: WrapperProviderProps) => {
+	const { data } = useRoomInfo();
+	const uid = useLocalUid();
+
+	const { defaultContent, setCustomContent } = useContent();
+
+	useEffect(() => {
+		setCustomContent(10000, ({}) => (
+			<MaxVideoView
+				user={defaultContent[uid]}
+				CustomChild={() => (
+					<UiKitMaxVideoView
+						user={defaultContent[uid]}
+						fallback={() =>
+							FallbackLogo(
+								defaultContent[uid].name as string,
+								false,
+								false,
+								true,
+								100,
+							)
+						}
+					/>
+				)}
+			/>
+		));
+	}, [data]);
+	return <>{props.children}</>;
+};
+
+const customization = customize({
+	components: {
+		videoCall: {
+			wrapper: WrapperProvider,
+		},
+	},
 });
 
-export default userCustomization;
+export default customization;
