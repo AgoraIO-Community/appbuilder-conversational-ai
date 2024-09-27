@@ -20,6 +20,8 @@ interface WrapperProviderProps {
 	children: React.ReactNode;
 }
 
+const AI_AGENT_UID = 111123456;
+
 const WrapperProvider = (props: WrapperProviderProps) => {
 	const { data } = useRoomInfo();
 	const uid = useLocalUid();
@@ -27,7 +29,7 @@ const WrapperProvider = (props: WrapperProviderProps) => {
 	const { defaultContent, setCustomContent } = useContent();
 
 	useEffect(() => {
-		setCustomContent(10000, ({}) => (
+		setCustomContent(AI_AGENT_UID, ({}) => (
 			<MaxVideoView
 				user={defaultContent[uid]}
 				CustomChild={() => (
