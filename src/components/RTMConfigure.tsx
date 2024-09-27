@@ -115,6 +115,7 @@ const RtmConfigure = (props: any) => {
   React.useEffect(() => {
     const handBrowserClose = ev => {
       ev.preventDefault();
+      return false
       return (ev.returnValue = 'Are you sure you want to exit?');
     };
     const logoutRtm = () => {

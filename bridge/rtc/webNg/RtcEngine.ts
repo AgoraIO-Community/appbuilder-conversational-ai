@@ -220,7 +220,7 @@ export default class RtcEngine {
   private activeSpeakerUid: number;
   public appId: string;
   // public AgoraRTC: any;
-  public client: any | IAgoraRTCClient;
+  public client: IAgoraRTCClient;
   public screenClient: any | IAgoraRTCClient;
   public eventsMap = new Map<string, callbackType>([
     ['onUserJoined', () => null],

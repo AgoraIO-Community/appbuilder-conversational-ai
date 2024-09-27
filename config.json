@@ -40,7 +40,7 @@
   "FRONTEND_ENDPOINT": "",
   "BACKEND_ENDPOINT": "https://managedservices-preprod.rteappbuilder.com",
   "PSTN": false,
-  "PRECALL": true,
+  "PRECALL": false,
   "CHAT": false,
   "CHAT_ORG_NAME": "",
   "CHAT_APP_NAME": "",

@@ -10,6 +10,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import FallbackLogo from "./components/FallbackLogo";
+import AudioVisualizer from "./components/AudioVisualizer";
 
 export interface WrapperInterface {
 	customKey1?: string;
@@ -20,7 +21,7 @@ interface WrapperProviderProps {
 	children: React.ReactNode;
 }
 
-const AI_AGENT_UID = 111123456;
+export const AI_AGENT_UID = 111123456;
 
 const WrapperProvider = (props: WrapperProviderProps) => {
 	const { data } = useRoomInfo();
@@ -31,21 +32,8 @@ const WrapperProvider = (props: WrapperProviderProps) => {
 	useEffect(() => {
 		setCustomContent(AI_AGENT_UID, ({}) => (
 			<MaxVideoView
-				user={defaultContent[uid]}
-				CustomChild={() => (
-					<UiKitMaxVideoView
-						user={defaultContent[uid]}
-						fallback={() =>
-							FallbackLogo(
-								defaultContent[uid].name as string,
-								false,
-								false,
-								true,
-								100,
-							)
-						}
-					/>
-				)}
+				user={{ ...defaultContent[uid], name: "Ai-Agent", video: false }}
+				CustomChild={() => <AudioVisualizer />}
 			/>
 		));
 	}, [data]);
