@@ -1,8 +1,8 @@
 import {StyleSheet} from 'react-native';
 import ThemeConfig from '../theme';
 
-export const SIDE_PANEL_MAX_WIDTH = '20%';
-export const SIDE_PANEL_MIN_WIDTH = 372;
+export const SIDE_PANEL_MAX_WIDTH = '23%';
+export const SIDE_PANEL_MIN_WIDTH = 380;
 export const SIDE_PANEL_GAP = 8;
 export const CAPTION_CONTAINER_HEIGHT = 144;
 export const MOBILE_CAPTION_CONTAINER_HEIGHT = 115;
@@ -11,7 +11,7 @@ const CommonStyles = StyleSheet.create({
   sidePanelContainerWeb: {
     flex: 1,
     maxWidth: SIDE_PANEL_MAX_WIDTH,
-    minWidth: 372,
+    minWidth: SIDE_PANEL_MIN_WIDTH,
     borderRadius: ThemeConfig.BorderRadius.small,
     marginLeft: SIDE_PANEL_GAP,
     backgroundColor: $config.CARD_LAYER_1_COLOR,
