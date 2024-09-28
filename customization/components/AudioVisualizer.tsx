@@ -1,45 +1,103 @@
 import RtcEngine from "bridge/rtc/webNg";
 import { AI_AGENT_UID } from "..";
-import { useContent, useIsHost, useLocalUid, useRtc } from "customization-api";
-import React, { useEffect, useRef, useState } from "react";
+import { useContent, useLocalUid, useRtc } from "customization-api";
+import React, { useEffect, useRef } from "react";
 import { Text, View } from "react-native";
 import { LiveAudioVisualizer } from "./react-audio-visualize";
-import { actionTypeGuard } from "agora-rn-uikit/src/Utils/actionTypeGuard";
+
+export const DisconnectedView = () => {
+	return (
+		<View
+			style={{
+				flex: 1,
+				backgroundColor: $config.CARD_LAYER_1_COLOR,
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+			}}
+		>
+			{/* big circle that covers the parent view */}
+			<svg
+				width="500"
+				height="500"
+				viewBox="0 0 500 500"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<circle
+					cx="250"
+					cy="250"
+					r="200"
+					stroke="darkgray"
+					stroke-width="40"
+					fill="transparent"
+				/>
+			</svg>
+		</View>
+	);
+};
+
+function createSilentAudioTrack() {
+	const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+	const silentSource = audioContext.createBufferSource();
+	const buffer = audioContext.createBuffer(1, 1, audioContext.sampleRate);
+	const channel = buffer.getChannelData(0);
+	channel[0] = 0; // Set the first (and only) sample to 0
+	silentSource.buffer = buffer;
+	silentSource.loop = true;
+
+	const destination = audioContext.createMediaStreamDestination();
+
+	silentSource.connect(destination);
+
+	silentSource.start();
+
+	const silentTrack = destination.stream.getAudioTracks()[0];
+
+	return silentTrack;
+}
+
+const mediaStream = new MediaStream();
+const emptyAudioTrack = createSilentAudioTrack();
+
+mediaStream.addTrack(emptyAudioTrack);
 
 const AudioVisualizer = (props) => {
-	const mediaStreamRef = useRef<MediaStream>(new MediaStream());
+	const mediaStreamRef = useRef<MediaStream>(mediaStream);
+	const mediaRecorderRef = useRef<MediaRecorder>(
+		new MediaRecorder(mediaStreamRef.current),
+	);
 	const { RtcEngineUnsafe } = useRtc();
 	const local = useLocalUid();
 	const { activeUids } = useContent();
 	const castedEngine = RtcEngineUnsafe as unknown as RtcEngine;
-	const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
 
 	useEffect(() => {
-		// const [uid] = activeUids.filter(
-		// 	(uid) => uid !== local && uid !== AI_AGENT_UID,
-		// );
+		// const uid = activeUids.filter(
+		// 	(uid) => uid !== AI_AGENT_UID && uid !== local,
+		// )[0];
 
-    const uid = AI_AGENT_UID
-
-		// const track = castedEngine.localStream.audio?.getMediaStreamTrack();
+		const uid = AI_AGENT_UID;
 
 		const track = castedEngine.remoteStreams
 			.get(uid)
 			?.audio?.getMediaStreamTrack();
 
+		// const track = castedEngine.localStream.audio?.getMediaStreamTrack();
+
+		if (mediaStreamRef.current.getTracks().length > 0) {
+			mediaStreamRef.current.removeTrack(mediaStreamRef.current.getTracks()[0]);
+		}
 		if (track) {
-			console.log("[AI VISUALIER]:Got track", track);
-			if (mediaStreamRef.current.getTracks().length > 0) {
-				mediaStreamRef.current.removeTrack(
-					mediaStreamRef.current.getTracks()[0],
-				);
-			}
+			console.log("track", mediaStreamRef.current.getTracks());
 			mediaStreamRef.current.addTrack(track);
-			const mediaRecorder = new MediaRecorder(mediaStreamRef.current);
-			mediaRecorder.start();
-			setMediaRecorder(mediaRecorder);
 		} else {
-			console.log("[AI VISUALIER]:No track", uid, activeUids);
+			console.log("empty track");
+			mediaStreamRef.current.addTrack(emptyAudioTrack);
+		}
+		if (mediaRecorderRef.current.state !== "recording") {
+			mediaRecorderRef.current.start();
 		}
 	}, [RtcEngineUnsafe, activeUids]);
 
@@ -54,30 +112,19 @@ const AudioVisualizer = (props) => {
 					justifyContent: "center",
 				}}
 			>
-				{mediaRecorder?.state === "recording" ? (
-					<LiveAudioVisualizer
-						mediaRecorder={mediaRecorder}
-						width={200}
-						height={200}
-						fftSize={32}
-						barWidth={10}
-						minDecibels={-60}
-						maxDecibels={-10}
-						gap={2}
-						backgroundColor="transparent"
-						barColor="white"
-						smoothingTimeConstant={0.8}
-					/>
-				) : (
-					<Text
-						style={{
-							color: "white",
-							fontSize: 20,
-						}}
-					>
-						Disconnected
-					</Text>
-				)}
+				<LiveAudioVisualizer
+					mediaRecorder={mediaRecorderRef.current}
+					width={300}
+					height={400}
+					fftSize={32}
+					barWidth={10}
+					minDecibels={-60}
+					maxDecibels={-10}
+					gap={2}
+					backgroundColor="transparent"
+					barColor="white"
+					smoothingTimeConstant={0.9}
+				/>
 			</View>
 		</>
 	);

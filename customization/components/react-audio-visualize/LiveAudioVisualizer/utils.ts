@@ -55,23 +55,44 @@ export const draw = (
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	}
 
-	const padding = data
-		.slice(0, 4)
-		.map((dp) => dp / 2)
-		.reverse();
+	// const sampled = data.slice(0, 8);
+	//
+	// const downSampled = new Array(5).fill(0);
+	//
+	// const downPoint = Math.floor(sampled.length / 5);
+	//
+	// sampled.forEach((dp, i) => {
+	// 	downSampled[Math.floor(i / downPoint)] += dp;
+	// });
 
-	[...padding, ...data].forEach((dp, i) => {
+	// const sampled = new Array(Math.ceil(data.length / 5)).fill(0);
+
+	// for (const dataPoint of data) {
+	// 	const index = Math.floor(dataPoint / 5);
+	// 	sampled[index] += dataPoint;
+	// }
+
+	const displayData = data.slice(0, 5);
+
+	const newBarWidth =
+		(canvas.width - gap * (displayData.length - 1)) / displayData.length;
+
+	const minHeight = newBarWidth;
+
+	displayData.forEach((dpo, i) => {
+		const dp = dpo;
+
 		ctx.fillStyle = barColor;
 
-		const x = i * (barWidth + gap);
+		const x = i * (newBarWidth + gap);
 		const y = amp - dp / 2;
-		const w = barWidth;
+		const w = newBarWidth;
 		const h = dp || 1;
 
 		ctx.beginPath();
 		if (ctx.roundRect) {
 			// making sure roundRect is supported by the browser
-			ctx.roundRect(x, y, w, h, 50);
+			ctx.roundRect(x, y - minHeight / 2, w, h + minHeight, w / 2);
 			ctx.fill();
 		} else {
 			// fallback for browsers that do not support roundRect
