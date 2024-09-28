@@ -1,10 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Card from "../../src/atoms/Card";
-import { useRoomInfo, ThemeConfig, PreCallSelectDevice } from "customization-api";
+import Toggle from "../../src/atoms/Toggle";
+import { useRoomInfo, ThemeConfig, PreCallSelectDevice, useNoiseSupression, ToggleState } from "customization-api";
+
 
 const CustomSidePanel = () => {
     const { data: { channel: channelName } } = useRoomInfo();
+    const { isNoiseSupressionEnabled, setNoiseSupression } = useNoiseSupression();
     return (
         <View style={styles.container}>
             {/* Channel Info Card */}
@@ -30,6 +33,15 @@ const CustomSidePanel = () => {
                 <View style={styles.deviceInfoContainer}>
                     <PreCallSelectDevice />
                 </View>
+
+                <View>
+                    <Text style={styles.label}>Noise Cancellation</Text>
+                    <Toggle
+                        disabled={false}
+                        isEnabled={isNoiseSupressionEnabled === ToggleState.enabled}
+                        toggleSwitch={() => setNoiseSupression(prev => !prev)}
+                    />
+                </View>
             </Card>
 
         </View>
@@ -53,6 +65,13 @@ const styles = StyleSheet.create({
         color: "rgba(255, 255, 255, 0.7)",
         fontFamily: ThemeConfig.FontFamily.sansPro,
         fontStyle: "normal"
+    },
+    label: {
+        fontWeight: '400',
+        fontSize: ThemeConfig.FontSize.small,
+        color: $config.FONT_COLOR,
+        fontFamily: ThemeConfig.FontFamily.sansPro,
+        marginBottom: 12,
     },
     cardContainerStyle: {
         padding: 16,
