@@ -1,14 +1,23 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import Card from "../../src/atoms/Card";
+import { useRoomInfo, ThemeConfig } from "customization-api";
 
 const CustomSidePanel = () => {
+    const { data: { channel: channelName } } = useRoomInfo();
     return (
         <View style={styles.container}>
-            <View style={styles.textContainer}>
+            <Card
+                cardContainerStyle={{
+                    ...styles.cardContainerStyle
+                }}
+            >
+                <Text style={styles.textStyle}>INFO</Text>
                 <Text style={styles.textStyle}>
-                    This is Custom Side Panel , Add sub components for device configuration and anis
+                    Channel Name : {channelName}
                 </Text>
-            </View>
+            </Card>
+
         </View>
     );
 };
@@ -25,9 +34,20 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         fontSize: 16,
-        fontWeight: "bold",
-        color: "white",
+        fontWeight: "400",
+        lineHeight: 20,
+        color: "rgba(255, 255, 255, 0.7)",
+        fontFamily: ThemeConfig.FontFamily.sansPro,
+        fontStyle: "normal"
     },
+    cardContainerStyle: {
+        padding: 16,
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: 12,
+        borderRadius: 8,
+        margin: 0
+    }
 });
 
 export default CustomSidePanel;
