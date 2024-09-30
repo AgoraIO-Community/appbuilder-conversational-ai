@@ -43,6 +43,7 @@ import {
   createRoomSuccessToastSubHeading,
 } from '../src/language/default-labels/createScreenLabels';
 import {LogSource, logger} from '../src/logger/AppBuilderLogger';
+import StorageContext from '../src/components/StorageContext';
 
 const CustomCreate = () => {
   const {
@@ -59,6 +60,8 @@ const CustomCreate = () => {
   const [roomCreated, setRoomCreated] = useState(false);
   const createRoomFun = useCreateRoom();
   const {setRoomInfo} = useSetRoomInfo();
+  const {setStore} = useContext(StorageContext);
+  const [displayName, setDisplayName] = useState('');
 
   const loadingText = useString('loadingText')();
 
@@ -162,6 +165,16 @@ const CustomCreate = () => {
     });
   };
 
+  const onChangeDisplayName = (name: string) => {
+    setDisplayName(name);
+    setStore(prevState => {
+      return {
+        ...prevState,
+        displayName: name,
+      };
+    });
+  };
+
   return (
     <CreateProvider
       value={{
@@ -191,7 +204,33 @@ const CustomCreate = () => {
                   placeholder={'Channal Name'}
                   onChangeText={text => onChangeRoomTitle(text)}
                   onSubmitEditing={() => {
-                    if (!roomTitle?.trim()) {
+                    if (!roomTitle?.trim() || !displayName?.trim()) {
+                      return;
+                    } else {
+                      if (!$config.BACKEND_ENDPOINT) {
+                        showError();
+                      } else {
+                        // !roomTitle?.trim() &&
+                        //   onChangeRoomTitle(randomRoomTitle);
+                        createRoomAndNavigateToShare(
+                          roomTitle?.trim(),
+                          pstnToggle,
+                          !coHostToggle,
+                        );
+                      }
+                    }
+                  }}
+                />
+                <Spacer size={40} />
+                <Input
+                  maxLength={maxInputLimit}
+                  labelStyle={style.inputLabelStyle}
+                  label={'Your Name'}
+                  value={displayName}
+                  placeholder={'Name'}
+                  onChangeText={text => onChangeDisplayName(text)}
+                  onSubmitEditing={() => {
+                    if (!roomTitle?.trim() || !displayName?.trim()) {
                       return;
                     } else {
                       if (!$config.BACKEND_ENDPOINT) {
@@ -213,7 +252,9 @@ const CustomCreate = () => {
               <View style={[style.btnContainer]}>
                 <PrimaryButton
                   iconName={'video-plus'}
-                  disabled={loading || !roomTitle?.trim()}
+                  disabled={
+                    loading || !roomTitle?.trim() || !displayName?.trim()
+                  }
                   containerStyle={!isDesktop && {width: '100%'}}
                   onPress={() => {
                     if (!$config.BACKEND_ENDPOINT) {
@@ -229,7 +270,7 @@ const CustomCreate = () => {
                     }
                   }}
                   text={loading ? loadingText : 'Create a channel'}
-                />                
+                />
               </View>
             </Card>
           </ScrollView>
