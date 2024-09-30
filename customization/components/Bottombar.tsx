@@ -11,7 +11,8 @@ const LogoComponent = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      gap:8
+      gap:8,
+      marginRight:20
     }}>
       <LogoIcon/>
       <Text style={{
@@ -50,23 +51,22 @@ const Bottombar = () => {
           layout: { hide: true},
           invite: { hide:true},
           more: {hide:true},
-          "meeting-title": {
-            align: "start",
-            component: MeetingTitleToolbarItem,
-            order: 0,
-            hide: true
-          },
-          "participant-count": {
-            align: "start",
-            component: ParticipantCountToolbarItem,
-            order: 1,
-            hide: true
-          },
           "logo":{
             align:'start',
             order:0,
             component:()=> <LogoComponent/>
-            },
+          },
+          "meeting-title": {
+            align: "start",
+            component: MeetingTitleToolbarItem,
+            order: 1,
+          },
+          "participant-count": {
+            align: "start",
+            component: ParticipantCountToolbarItem,
+            order: 2,
+          },
+         
           "connect-agent": {
             align: "end",
             label: 'Agent',
