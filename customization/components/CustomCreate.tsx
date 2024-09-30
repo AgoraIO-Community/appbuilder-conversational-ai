@@ -44,7 +44,7 @@ import {
 } from '../../src/language/default-labels/createScreenLabels';
 import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
-import CustomLogo from './CustomLogo';
+import {LogoComponent} from './Bottombar';
 
 const CustomCreate = () => {
   const {
@@ -192,7 +192,7 @@ const CustomCreate = () => {
             <Card>
               <View>
                 <View style={style.logoContainerStyle}>
-                  <CustomLogo />
+                  <LogoComponent />
                 </View>
                 <Spacer size={isDesktop ? 20 : 16} />
                 <Text style={style.heading}>Agora Conversational AI</Text>

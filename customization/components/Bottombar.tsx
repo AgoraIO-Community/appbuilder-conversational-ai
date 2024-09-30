@@ -5,7 +5,7 @@ import { AgentControl } from "./AgentControls";
 import { AgentProvider } from './AgentControls/AgentContext';
 import { LogoIcon } from "./icons";
 
-const LogoComponent = () => {
+export const LogoComponent = () => {
   return(
     <View style={{
       flexDirection: 'row',
