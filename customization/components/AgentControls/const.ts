@@ -2,13 +2,13 @@ import{ UID} from 'agora-rtc-sdk-ng';
 
 export const AI_AGENT_STATE = {
     'NOT_CONNECTED': "Start Call",
-    'REQUEST_SENT': "Requesting agent join..",
-    'AWAITING_JOIN': "Agent will join shortly..",
+    'REQUEST_SENT': "Requesting agent join..", // loading - reg
+    'AWAITING_JOIN': "Agent will join shortly..", // loading
     "AGENT_CONNECTED": "End Call",
     'AGENT_REQUEST_FAILED': 'Start Call',
-    'AGENT_DISCONNECT_REQUEST': 'Disconnecting agent...',
+    'AGENT_DISCONNECT_REQUEST': 'Disconnecting agent...', // loading - req
     'AGENT_DISCONNECT_FAILED': 'End Call',
-    'AWAITING_LEAVE': "Bye Bye, Agent"
+    'AWAITING_LEAVE': "Bye Bye, Agent" // loading
 } as const;
 
 export type AIAgentState = keyof typeof AI_AGENT_STATE

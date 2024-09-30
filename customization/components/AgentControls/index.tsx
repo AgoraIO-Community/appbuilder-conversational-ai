@@ -4,8 +4,8 @@ import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { AgentContext } from './AgentContext';
 import Toast from "../../../react-native-toast-message/index";
 
-import { ThemeConfig, useContent } from "customization-api";
-import { CallIcon } from '../icons';
+import { ThemeConfig, useContent, useEndCall } from "customization-api";
+import { CallIcon, EndCall } from '../icons';
 
 const connectToAIAgent = async (agentAction: 'start_agent' | 'stop_agent', channel_name: string): Promise<void> => {
 
@@ -47,6 +47,7 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
     const {agentConnectionState, setAgentConnectionState} = useContext(AgentContext);
     // const { users } = useContext(UserContext)
     const {  activeUids:users } = useContent();
+    const endcall =  useEndCall();
 
     // const { toast } = useToast()  
     console.log("Agent Control--", {agentConnectionState}, {bth: AI_AGENT_STATE[agentConnectionState]})
@@ -95,6 +96,8 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
           }
           // disconnect agent with agent is already connected or when earlier disconnect failed
           if(agentConnectionState === AgentState.AGENT_CONNECTED || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED){
+            await endcall()
+            return // check later
             try{
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_REQUEST);
               await connectToAIAgent('stop_agent', channel_name);
@@ -178,7 +181,8 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
         || agentConnectionState === AgentState.AGENT_DISCONNECT_REQUEST 
         || agentConnectionState === AgentState.AWAITING_LEAVE 
         || agentConnectionState === AgentState.AWAITING_JOIN)
-
+    const isStartAgent = (agentConnectionState === AgentState.NOT_CONNECTED || agentConnectionState === AgentState.AGENT_REQUEST_FAILED)
+    const isEndAgent = (agentConnectionState === AgentState.AGENT_CONNECTED || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED)
     return(
         <div>
         <TouchableOpacity
@@ -191,16 +195,20 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
                 gap: 8,
                 borderRadius: 40, 
                 borderWidth: 1, 
-                borderColor: '#00C2FF',
+                borderColor: isEndAgent ? '#FF414D' : '#00C2FF',
                 flexDirection:'row',
             }}        
             onPress={handleConnectionToggle}
 
             disabled={isLoading}
         >
-          {isLoading ? <ActivityIndicator size="small" color="#00C2FF" /> : <CallIcon/>}
+          {isLoading ? <ActivityIndicator size="small" color="#00C2FF" /> : isStartAgent ? <CallIcon/>: <EndCall />}
           
-            <Text  style={{color: '#00C2FF',fontFamily:ThemeConfig.FontFamily.sansPro}}>{`${AI_AGENT_STATE[agentConnectionState]}` }</Text>
+            <Text style={{ 
+              color: isEndAgent ? '#FF414D' : '#00C2FF',
+              fontFamily:ThemeConfig.FontFamily.sansPro
+
+            }}>{`${AI_AGENT_STATE[agentConnectionState]}` }</Text>
         </TouchableOpacity>
         </div>
     )
