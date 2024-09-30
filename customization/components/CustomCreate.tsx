@@ -104,6 +104,13 @@ const CustomCreate = () => {
     };
     // default username
     setUserName("You")
+    setDisplayName("You")
+    setStore(prevState => {
+      return {
+        ...prevState,
+        displayName: "You",
+      };
+    });
     // set default meeting name
     onChangeRoomTitle(generateChannelId)
 
