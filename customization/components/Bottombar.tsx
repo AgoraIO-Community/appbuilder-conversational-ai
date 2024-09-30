@@ -24,7 +24,7 @@ export const LogoComponent = () => {
         lineHeight: 20, 
         fontFamily: ThemeConfig.FontFamily.sansPro
       }}>
-        Agent Ten
+        Agora & OpenAI Conversational AI Demo
       </Text>
     </View>
   )
@@ -60,11 +60,13 @@ const Bottombar = () => {
             align: "start",
             component: MeetingTitleToolbarItem,
             order: 1,
+            hide: true
           },
           "participant-count": {
             align: "start",
             component: ParticipantCountToolbarItem,
             order: 2,
+            hide: true
           },
          
           "connect-agent": {
