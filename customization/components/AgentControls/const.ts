@@ -32,9 +32,9 @@ export const enum AgentState {
 
 }
 
-export const AI_AGENT_UID:UID = 123;
+export const AI_AGENT_UID = 123;
 
 // export const AGENT_PROXY_URL = "http://localhost:3000/api/proxy"
-export const AGENT_PROXY_URL = "https://conversational-ai-agent-git-testing-cors-agoraio.vercel.app/api/proxy"
-// export const AGENT_PROXY_URL = "https://nodejs-serverless-function-express-alpha-smoky.vercel.app/api/hello?name=sdgfhjgk&channel_name=channelB&uid=123&action=start_agent"
+// export const AGENT_PROXY_URL = "https://conversational-ai-agent-git-testing-cors-agoraio.vercel.app/api/proxy"
+export const AGENT_PROXY_URL = "https://nodejs-serverless-function-express-alpha-smoky.vercel.app/api/hello"
 // export const AGENT_PROXY_URL = "https://conversational-ai-agent-git-setmute-agoraio.vercel.app/api/proxy"
