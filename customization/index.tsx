@@ -10,8 +10,10 @@ import {
 import AudioVisualizer, {
 	DisconnectedView,
 } from "./components/AudioVisualizer";
-import Bottombar from "./components/Bottombar";
-import { AI_AGENT_UID } from "./components/AgentControls/const";
+import Bottombar from './components/Bottombar'
+import CustomCreate from './components/CustomCreate'
+import {AI_AGENT_UID} from "./components/AgentControls/const"
+
 const Topbar = () => {
 	return null;
 };
@@ -61,6 +63,7 @@ const LayoutComponentE: LayoutComponent = () => {
 
 const customization = customize({
 	components: {
+		create: CustomCreate,
 		videoCall: {
 			customLayout() {
 				return [

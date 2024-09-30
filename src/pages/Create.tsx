@@ -40,6 +40,7 @@ import Tooltip from '../atoms/Tooltip';
 import ImageIcon from '../atoms/ImageIcon';
 import hexadecimalTransparency from '../utils/hexadecimalTransparency';
 import {randomNameGenerator} from '../utils';
+import {isValidReactComponent} from '../utils/common'
 import {useSetRoomInfo} from '../components/room-info/useSetRoomInfo';
 import IDPLogoutComponent from '../auth/IDPLogoutComponent';
 import isSDK from '../utils/isSDK';
@@ -65,17 +66,16 @@ const Create = () => {
     let components: {
       CreateComponent?: React.ElementType;
     } = {};
-    // commented for v1 release
-    // if (
-    //   data?.components?.create &&
-    //   typeof data?.components?.create !== 'object'
-    // ) {
-    //   if (
-    //     data?.components?.create &&
-    //     isValidReactComponent(data?.components?.create)
-    //   )
-    //     components.CreateComponent = data?.components?.create;
-    // }
+    if (
+      data?.components?.create &&
+      typeof data?.components?.create !== 'object'
+    ) {
+      if (
+        data?.components?.create &&
+        isValidReactComponent(data?.components?.create)
+      )
+        components.CreateComponent = data?.components?.create;
+    }
     return components;
   });
 
