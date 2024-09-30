@@ -2,7 +2,7 @@ import { ToolbarPreset, ToolbarComponents, useSidePanel, SidePanelType, useRoomI
 import React,{ useEffect }  from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { AgentControl } from "./AgentControls";
-
+import { AgentProvider } from './AgentControls/AgentContext';
 
 const Bottombar = () => {
   const {
@@ -16,7 +16,7 @@ const Bottombar = () => {
       setSidePanel(SidePanelType.Settings)
   }, [])
   return (
-    <>
+    <AgentProvider>
       <ToolbarPreset
         align="bottom"
         items={{
@@ -43,7 +43,7 @@ const Bottombar = () => {
           'end-call':{ align: 'end', order: 2 }
         }}
       />
-    </>
+    </AgentProvider>
   );
 };
 
