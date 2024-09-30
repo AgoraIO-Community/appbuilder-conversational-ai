@@ -138,13 +138,11 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
 
             disabled={isLoading}
         >
-          {!isLoading && <CallIcon/>}
-            {isLoading && (
+          <CallIcon/>
+            {/* {isLoading && (
                 // <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 <>Loading..</>
-            )}
-       
-
+            )} */}
             <Text  style={{color: '#00C2FF',fontFamily:ThemeConfig.FontFamily.sansPro}}>{`${AI_AGENT_STATE[agentConnectionState]}` }</Text>
         </TouchableOpacity>
         </div>
