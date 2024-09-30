@@ -16,15 +16,15 @@ export const LogoComponent = () => {
     }}>
       <LogoIcon/>
       <Text style={{
-        color: '#00C2FF',
+        color: '#C3C3C3',
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: 18,
         fontStyle: 'normal',
         fontWeight: '600',
-        lineHeight: 20, 
+        lineHeight: 18, 
         fontFamily: ThemeConfig.FontFamily.sansPro
       }}>
-        Agent Ten
+        Agora & OpenAI Conversational AI Demo
       </Text>
     </View>
   )
@@ -60,11 +60,13 @@ const Bottombar = () => {
             align: "start",
             component: MeetingTitleToolbarItem,
             order: 1,
+            hide:true,
           },
           "participant-count": {
             align: "start",
             component: ParticipantCountToolbarItem,
             order: 2,
+            hide:true,
           },
          
           "connect-agent": {
@@ -74,7 +76,7 @@ const Bottombar = () => {
             order: 3
           },
           'local-audio':{ align: 'end', order: 1},
-          'end-call':{ align: 'end', order: 2 }
+          'end-call':{ align: 'end', order: 2, hide: true }
         }}
       />
     </AgentProvider>

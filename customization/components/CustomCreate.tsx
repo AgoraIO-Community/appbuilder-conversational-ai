@@ -186,8 +186,8 @@ const CustomCreate = () => {
                   <LogoComponent />
                 </View>
                 <Spacer size={isDesktop ? 20 : 16} />
-                <Text style={style.heading}>Agora & OpenAI Conversational AI Demo</Text>
-                <Spacer size={40} />
+                {/* <Text style={style.heading}>Agora Conversational AI</Text> */}
+                <Spacer size={20} />
                 <Input
                   maxLength={maxInputLimit}
                   labelStyle={style.inputLabelStyle}
@@ -293,15 +293,15 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   heading: {
-    fontSize: ThemeConfig.FontSize.extraLarge,
+    fontSize: ThemeConfig.FontSize.medium,
     fontWeight: '700',
-    lineHeight: ThemeConfig.FontSize.extraLarge,
+    lineHeight: ThemeConfig.FontSize.medium,
     color: $config.FONT_COLOR,
     fontFamily: ThemeConfig.FontFamily.sansPro,
     opacity: ThemeConfig.EmphasisOpacity.high,
   },
   headline: {
-    fontSize: 18,
+    fontSize: 10,
     fontWeight: '400',
     textAlign: 'center',
     color: $config.FONT_COLOR,
