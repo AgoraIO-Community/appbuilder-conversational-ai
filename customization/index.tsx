@@ -10,18 +10,18 @@ import {
 import AudioVisualizer, {
 	DisconnectedView,
 } from "./components/AudioVisualizer";
-import Bottombar from './components/Bottombar'
-import {AI_AGENT_UID} from "./components/AgentControls/const"
+import Bottombar from "./components/Bottombar";
+import { AI_AGENT_UID } from "./components/AgentControls/const";
 const Topbar = () => {
-    return null;
+	return null;
 };
-  
+
 const LayoutComponentE: LayoutComponent = () => {
 	const localUid = useLocalUid();
 	const { defaultContent, activeUids } = useContent();
 
 	const connected = activeUids.includes(AI_AGENT_UID);
-	console.log({activeUids}, 'active uids')
+	console.log({ activeUids }, "active uids");
 
 	return (
 		<View
@@ -78,4 +78,5 @@ const customization = customize({
 	},
 });
 
+export { AI_AGENT_UID };
 export default customization;
