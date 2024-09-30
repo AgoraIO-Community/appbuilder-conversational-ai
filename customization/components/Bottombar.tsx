@@ -1,8 +1,36 @@
-import { ToolbarPreset, ToolbarComponents, useSidePanel, SidePanelType, useRoomInfo } from "customization-api";
+import { ToolbarPreset, ToolbarComponents, useSidePanel, SidePanelType, useRoomInfo,ThemeConfig } from "customization-api";
 import React,{ useEffect }  from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity,Image } from "react-native";
 import { AgentControl } from "./AgentControls";
 import { AgentProvider } from './AgentControls/AgentContext';
+import { LogoIcon } from "./icons";
+
+const LogoComponent = () => {
+  return(
+    <View style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap:8,
+      marginRight:20
+    }}>
+      <LogoIcon/>
+      <Text style={{
+        color: '#00C2FF',
+        textAlign: 'center',
+        fontSize: 20,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        lineHeight: 20, 
+        fontFamily: ThemeConfig.FontFamily.sansPro
+      }}>
+        Agent Ten
+      </Text>
+    </View>
+  )
+}
+
+
 
 const Bottombar = () => {
   const {
@@ -23,16 +51,22 @@ const Bottombar = () => {
           layout: { hide: true},
           invite: { hide:true},
           more: {hide:true},
+          "logo":{
+            align:'start',
+            order:0,
+            component:()=> <LogoComponent/>
+          },
           "meeting-title": {
             align: "start",
             component: MeetingTitleToolbarItem,
-            order: 0,
+            order: 1,
           },
           "participant-count": {
             align: "start",
             component: ParticipantCountToolbarItem,
-            order: 1,
+            order: 2,
           },
+         
           "connect-agent": {
             align: "end",
             label: 'Agent',

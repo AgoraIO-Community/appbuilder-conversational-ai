@@ -56,7 +56,7 @@ export const SettingsHeader = props => {
       centerComponent={
         <Text style={SidePanelStyles.heading}>{settingsLabel}</Text>
       }
-      trailingIconName="close"
+      trailingIconName=""
       trailingIconOnPress={() => {
         props.handleClose && props.handleClose();
         setSidePanel(SidePanelType.None);
