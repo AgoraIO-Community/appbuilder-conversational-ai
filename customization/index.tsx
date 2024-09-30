@@ -11,6 +11,7 @@ import AudioVisualizer, {
 	DisconnectedView,
 } from "./components/AudioVisualizer";
 import Bottombar from './components/Bottombar'
+import CustomCreate from './CustomCreate'
 
 const Topbar = () => {
     return null;
@@ -64,6 +65,7 @@ const LayoutComponentE: LayoutComponent = () => {
 
 const customization = customize({
 	components: {
+		create: CustomCreate,
 		videoCall: {
 			customLayout() {
 				return [
