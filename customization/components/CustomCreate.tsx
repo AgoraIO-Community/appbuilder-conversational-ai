@@ -66,15 +66,6 @@ const CustomCreate = () => {
 
   const loadingText = useString('loadingText')();
 
-  //toast
-  const createRoomSuccessToastHeadingText = useString(
-    createRoomSuccessToastHeading,
-  );
-  const createRoomSuccessToastSubHeadingText = useString(
-    createRoomSuccessToastSubHeading,
-  )();
-  //toast
-
   const createRoomErrorToastHeadingText = useString(
     createRoomErrorToastHeading,
   )();
@@ -123,8 +114,8 @@ const CustomCreate = () => {
         Toast.show({
           leadingIconName: 'tick-fill',
           type: 'success',
-          text1: createRoomSuccessToastHeadingText(trimText(roomTitle)),
-          text2: createRoomSuccessToastSubHeadingText,
+          text1: trimText(roomTitle) + " has been joined",
+          text2: null,
           visibilityTime: 3000,
           primaryBtn: null,
           secondaryBtn: null,
