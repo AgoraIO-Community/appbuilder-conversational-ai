@@ -102,16 +102,13 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
       useEffect(() => {
         console.log("agent contrl", {users})
         // welcome agent
-        if(users.length){
-          const aiAgentUID = users.filter((item) => item === AI_AGENT_UID);
-          console.log("agent contrl",{aiAgentUID})
-          if(aiAgentUID.length){
+        const aiAgentUID = users.filter((item) => item === AI_AGENT_UID);
+          if(aiAgentUID.length && agentConnectionState === AgentState.AWAITING_JOIN){
             setAgentConnectionState(AgentState.AGENT_CONNECTED);
             // toast({title: "Say Hi!!"})
           }
-        }
         // when agent leaves, show left toast, and set agent to not connected state
-        if(!users.length && agentConnectionState === AgentState.AWAITING_LEAVE){
+        if(!aiAgentUID.length && agentConnectionState === AgentState.AWAITING_LEAVE){
             // toast({ title: "Agent left the call"})
             setAgentConnectionState(AgentState.NOT_CONNECTED);
         }

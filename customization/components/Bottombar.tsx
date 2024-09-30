@@ -2,7 +2,7 @@ import { ToolbarPreset, ToolbarComponents, useSidePanel, SidePanelType, useRoomI
 import React,{ useEffect }  from "react";
 import { Text, View, TouchableOpacity,Image } from "react-native";
 import { AgentControl } from "./AgentControls";
-
+import { AgentProvider } from './AgentControls/AgentContext';
 
 const LogoIcon = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,7 +50,7 @@ const Bottombar = () => {
       setSidePanel(SidePanelType.Settings)
   }, [])
   return (
-    <>
+    <AgentProvider>
       <ToolbarPreset
         align="bottom"
         items={{
@@ -84,7 +84,7 @@ const Bottombar = () => {
           'end-call':{ align: 'end', order: 2 }
         }}
       />
-    </>
+    </AgentProvider>
   );
 };
 

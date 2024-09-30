@@ -11,14 +11,11 @@ import AudioVisualizer, {
 	DisconnectedView,
 } from "./components/AudioVisualizer";
 import Bottombar from './components/Bottombar'
-
+import {AI_AGENT_UID} from "./components/AgentControls/const"
 const Topbar = () => {
     return null;
 };
   
-  
-export const AI_AGENT_UID = 123;
-
 const LayoutComponentE: LayoutComponent = () => {
 	const localUid = useLocalUid();
 	const { defaultContent, activeUids } = useContent();
