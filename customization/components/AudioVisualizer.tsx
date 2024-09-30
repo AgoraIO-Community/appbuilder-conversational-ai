@@ -21,14 +21,14 @@ export const DisconnectedView = () => {
 				width="500"
 				height="500"
 				viewBox="0 0 500 500"
-				fill="none"
+				fill="#00C2FF"
 				xmlns="http://www.w3.org/2000/svg"
 			>
 				<circle
 					cx="250"
 					cy="250"
 					r="200"
-					stroke="darkgray"
+					stroke="#00C2FF"
 					stroke-width="40"
 					fill="transparent"
 				/>
@@ -122,7 +122,7 @@ const AudioVisualizer = (props) => {
 					maxDecibels={-10}
 					gap={2}
 					backgroundColor="transparent"
-					barColor="white"
+					barColor="#00C2FF"
 					smoothingTimeConstant={0.9}
 				/>
 			</View>
