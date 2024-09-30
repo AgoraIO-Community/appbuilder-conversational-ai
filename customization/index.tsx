@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import {
 	customize,
 	MaxVideoView,
@@ -10,14 +10,21 @@ import {
 import AudioVisualizer, {
 	DisconnectedView,
 } from "./components/AudioVisualizer";
+import Bottombar from './components/Bottombar'
 
-export const AI_AGENT_UID = 111123456;
+const Topbar = () => {
+    return null;
+};
+  
+  
+export const AI_AGENT_UID = 123;
 
 const LayoutComponentE: LayoutComponent = () => {
 	const localUid = useLocalUid();
 	const { defaultContent, activeUids } = useContent();
 
 	const connected = activeUids.includes(AI_AGENT_UID);
+	console.log({activeUids}, 'active uids')
 
 	return (
 		<View
@@ -68,6 +75,8 @@ const customization = customize({
 					},
 				];
 			},
+			topToolBar: Topbar,
+			bottomToolBar: Bottombar,
 		},
 	},
 });
