@@ -37,7 +37,7 @@ const LayoutComponentE: LayoutComponent = () => {
 			<MaxVideoView
 				user={{
 					...defaultContent[AI_AGENT_UID],
-					name: "Ai-Agent" + (connected ? "" : " (disconnected)"),
+					name: "OpenAI" + (connected ? "" : " (disconnected)"),
 					video: false,
 				}}
 				CustomChild={() =>

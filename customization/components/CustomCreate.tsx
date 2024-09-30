@@ -45,6 +45,7 @@ import {
 import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
 import {LogoComponent} from './Bottombar';
+import { useUserName } from 'customization-api';
 
 const CustomCreate = () => {
   const {
@@ -63,7 +64,7 @@ const CustomCreate = () => {
   const {setRoomInfo} = useSetRoomInfo();
   const {setStore} = useContext(StorageContext);
   const [displayName, setDisplayName] = useState('');
-
+  const [userName, setUserName] = useUserName();
   const loadingText = useString('loadingText')();
 
   const createRoomErrorToastHeadingText = useString(
@@ -88,6 +89,25 @@ const CustomCreate = () => {
     return () => {};
   }, []);
 
+  // set default room and username
+  useEffect(() => {
+    const generateChannelId = () => {
+      const characters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < 16; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * characters.length)
+        );
+      }
+      return result;
+    };
+    // default username
+    setUserName("You")
+    // set default meeting name
+    onChangeRoomTitle(generateChannelId)
+
+  }, [])
   const showShareScreen = () => {
     setRoomCreated(true);
   };
@@ -157,15 +177,15 @@ const CustomCreate = () => {
     });
   };
 
-  const onChangeDisplayName = (name: string) => {
-    setDisplayName(name);
-    setStore(prevState => {
-      return {
-        ...prevState,
-        displayName: name,
-      };
-    });
-  };
+  // const onChangeDisplayName = (name: string) => {
+  //   setDisplayName(name);
+  //   setStore(prevState => {
+  //     return {
+  //       ...prevState,
+  //       displayName: name,
+  //     };
+  //   });
+  // };
 
   return (
     <CreateProvider
@@ -188,7 +208,7 @@ const CustomCreate = () => {
                 <Spacer size={isDesktop ? 20 : 16} />
                 {/* <Text style={style.heading}>Agora Conversational AI</Text> */}
                 <Spacer size={20} />
-                <Input
+                {/* <Input
                   maxLength={maxInputLimit}
                   labelStyle={style.inputLabelStyle}
                   label={'Your Name'}
@@ -213,7 +233,7 @@ const CustomCreate = () => {
                     }
                   }}
                 />
-                <Spacer size={40} />
+                <Spacer size={40} /> */}
                 <Input
                   maxLength={maxInputLimit}
                   labelStyle={style.inputLabelStyle}
