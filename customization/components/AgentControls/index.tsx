@@ -3,6 +3,7 @@ import { AI_AGENT_STATE, AIAgentState, AgentState, AI_AGENT_UID, AGENT_PROXY_URL
 import { TouchableOpacity, Text } from "react-native";
 import { AgentContext } from './AgentContext';
 import { useContent } from "customization-api";
+import Toast from "../../../react-native-toast-message/index";
 
 const CallIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,6 +66,16 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
               setAgentConnectionState(AgentState.AWAITING_JOIN);
             //   toast({title: "Agent requested to join"})
 
+              Toast.show({
+                leadingIconName: 'tick-fill',
+                type: 'success',
+                text1: "Agent requested to join",
+                text2: null,
+                visibilityTime: 3000,
+                primaryBtn: null,
+                secondaryBtn: null,
+                leadingIcon: null,
+              })
             }catch(agentConnectError){
               setAgentConnectionState(AgentState.AGENT_REQUEST_FAILED);
             //   toast({
@@ -73,6 +84,17 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
             //     variant: "destructive",
             //     action: <ToastAction altText="Try again">Try again</ToastAction>,
             //   })
+              Toast.show({
+                leadingIconName: 'alert',
+                type: 'error',
+                text1: "Uh oh! Agent failed to connect",
+                text2: null,
+                visibilityTime: 5000,
+                primaryBtn: null,
+                secondaryBtn: null,
+                leadingIcon: null,
+              })
+
               throw agentConnectError
             }
           }
@@ -83,6 +105,17 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
               await connectToAIAgent('stop_agent', channel_name);
               setAgentConnectionState(AgentState.AWAITING_LEAVE);
             //   toast({ title: "Agent disconnecting..."})
+              Toast.show({
+                leadingIconName: 'tick-fill',
+                type: 'success',
+                text1: "Agent disconnecting...",
+                text2: null,
+                visibilityTime: 3000,
+                primaryBtn: null,
+                secondaryBtn: null,
+                leadingIcon: null,
+              })
+
             }catch(agentDisconnectError){
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_FAILED);
             //   toast({
@@ -91,6 +124,17 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
             //     variant: "destructive",
             //     action: <ToastAction altText="Try again">Try again</ToastAction>,
             //   })
+              Toast.show({
+                leadingIconName: 'alert',
+                type: 'error',
+                text1: "Uh oh! Agent failed to disconnect",
+                text2: null,
+                visibilityTime: 5000,
+                primaryBtn: null,
+                secondaryBtn: null,
+                leadingIcon: null,
+              })
+
               throw agentDisconnectError
             }
           }
@@ -106,10 +150,31 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
           if(aiAgentUID.length && agentConnectionState === AgentState.AWAITING_JOIN){
             setAgentConnectionState(AgentState.AGENT_CONNECTED);
             // toast({title: "Say Hi!!"})
+            Toast.show({
+              leadingIconName: 'tick-fill',
+              type: 'success',
+              text1: "Say Hi!!",
+              text2: null,
+              visibilityTime: 3000,
+              primaryBtn: null,
+              secondaryBtn: null,
+              leadingIcon: null,
+            })
+            
           }
         // when agent leaves, show left toast, and set agent to not connected state
         if(!aiAgentUID.length && agentConnectionState === AgentState.AWAITING_LEAVE){
             // toast({ title: "Agent left the call"})
+            Toast.show({
+              leadingIconName: 'tick-fill',
+              type: 'success',
+              text1: "Agent left the call",
+              text2: null,
+              visibilityTime: 3000,
+              primaryBtn: null,
+              secondaryBtn: null,
+              leadingIcon: null,
+            })
             setAgentConnectionState(AgentState.NOT_CONNECTED);
         }
       },[users])
