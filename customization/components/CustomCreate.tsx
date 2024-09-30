@@ -186,7 +186,7 @@ const CustomCreate = () => {
                   <LogoComponent />
                 </View>
                 <Spacer size={isDesktop ? 20 : 16} />
-                <Text style={style.heading}>Agora Conversational AI</Text>
+                <Text style={style.heading}>Agora & OpenAI Conversational AI Demo</Text>
                 <Spacer size={40} />
                 <Input
                   maxLength={maxInputLimit}
