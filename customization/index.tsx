@@ -1,49 +1,82 @@
+import React from "react";
+import { Text, View, TouchableOpacity } from "react-native";
 import {
 	customize,
 	MaxVideoView,
 	useContent,
 	useLocalUid,
-	useRecording,
-	useRoomInfo,
-	UiKitMaxVideoView,
+	LayoutComponent,
 } from "customization-api";
-import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import FallbackLogo from "./components/FallbackLogo";
-import AudioVisualizer from "./components/AudioVisualizer";
+import AudioVisualizer, {
+	DisconnectedView,
+} from "./components/AudioVisualizer";
+import Bottombar from './components/Bottombar'
 
-export interface WrapperInterface {
-	customKey1?: string;
-	customKey2?: string;
-}
+const Topbar = () => {
+    return null;
+};
+  
+  
+export const AI_AGENT_UID = 123;
 
-interface WrapperProviderProps {
-	children: React.ReactNode;
-}
+const LayoutComponentE: LayoutComponent = () => {
+	const localUid = useLocalUid();
+	const { defaultContent, activeUids } = useContent();
 
-export const AI_AGENT_UID = 111123456;
+	const connected = activeUids.includes(AI_AGENT_UID);
+	console.log({activeUids}, 'active uids')
 
-const WrapperProvider = (props: WrapperProviderProps) => {
-	const { data } = useRoomInfo();
-	const uid = useLocalUid();
-
-	const { defaultContent, setCustomContent } = useContent();
-
-	useEffect(() => {
-		setCustomContent(AI_AGENT_UID, ({}) => (
+	return (
+		<View
+			style={{
+				flex: 1,
+				display: "flex",
+				flexDirection: "column",
+				borderRadius: 10,
+			}}
+		>
 			<MaxVideoView
-				user={{ ...defaultContent[uid], name: "Ai-Agent", video: false }}
-				CustomChild={() => <AudioVisualizer />}
+				user={{
+					...defaultContent[AI_AGENT_UID],
+					name: "Ai-Agent" + (connected ? "" : " (disconnected)"),
+					video: false,
+				}}
+				CustomChild={() =>
+					connected ? <AudioVisualizer /> : <DisconnectedView />
+				}
 			/>
-		));
-	}, [data]);
-	return <>{props.children}</>;
+			<View
+				style={{
+					position: "absolute",
+					bottom: 10,
+					right: 10,
+					display: "flex",
+					flexDirection: "row",
+					height: 200,
+					width: 300,
+				}}
+			>
+				<MaxVideoView user={defaultContent[localUid]} />
+			</View>
+		</View>
+	);
 };
 
 const customization = customize({
 	components: {
 		videoCall: {
-			wrapper: WrapperProvider,
+			customLayout() {
+				return [
+					{
+						name: "Ai-Agent",
+						label: "Ai-Agent",
+						icon: "🤖",
+						component: LayoutComponentE,
+					},
+				];
+			},
+			topToolBar: Topbar,
+			bottomToolBar: Bottombar,
 		},
 	},
 });
