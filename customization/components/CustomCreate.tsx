@@ -114,7 +114,7 @@ const CustomCreate = () => {
         Toast.show({
           leadingIconName: 'tick-fill',
           type: 'success',
-          text1: trimText(roomTitle) + " has been joined",
+          text1: "You have joined channel "+ trimText(roomTitle),
           text2: null,
           visibilityTime: 3000,
           primaryBtn: null,
