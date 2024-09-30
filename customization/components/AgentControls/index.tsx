@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { AI_AGENT_STATE, AIAgentState, AgentState, AI_AGENT_UID, AGENT_PROXY_URL} from "./const"
 import { TouchableOpacity, Text } from "react-native";
 import { AgentContext } from './AgentContext';
-import { useContent } from "customization-api";
+import { ThemeConfig, useContent } from "customization-api";
 
 const CallIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -148,7 +148,7 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
             )}
        
 
-            <Text  style={{color: '#00C2FF'}}>{`${AI_AGENT_STATE[agentConnectionState]}` }</Text>
+            <Text  style={{color: '#00C2FF',fontFamily:ThemeConfig.FontFamily.sansPro}}>{`${AI_AGENT_STATE[agentConnectionState]}` }</Text>
         </TouchableOpacity>
         </div>
     )
