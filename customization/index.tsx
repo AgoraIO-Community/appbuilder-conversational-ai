@@ -11,7 +11,7 @@ import AudioVisualizer, {
 	DisconnectedView,
 } from "./components/AudioVisualizer";
 import Bottombar from './components/Bottombar'
-import CustomCreate from './CustomCreate'
+import CustomCreate from './components/CustomCreate'
 
 import {AI_AGENT_UID} from "./components/AgentControls/const"
 const Topbar = () => {
