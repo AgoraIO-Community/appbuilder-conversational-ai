@@ -265,7 +265,7 @@ const CustomCreate = () => {
                 <PrimaryButton
                   iconName={'video-plus'}
                   disabled={
-                    loading || !roomTitle?.trim() || !displayName?.trim()
+                    loading || !roomTitle?.trim() 
                   }
                   containerStyle={!isDesktop && {width: '100%'}}
                   onPress={() => {
