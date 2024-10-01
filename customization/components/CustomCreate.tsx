@@ -46,6 +46,7 @@ import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
 import {LogoComponent} from './Bottombar';
 import { useUserName } from 'customization-api';
+import { AgoraLogo, AgoraOpenAILogo, OpenAILogo } from './icons';
 
 const CustomCreate = () => {
   const {
@@ -209,9 +210,34 @@ const CustomCreate = () => {
           <ScrollView contentContainerStyle={style.main}>
             <Card>
               <View>
-                <View style={style.logoContainerStyle}>
-                  <LogoComponent />
-                </View>
+                {isMobileUA() ? (
+                  <View style={style.topLogoContainer}>
+                    <View style={{paddingTop: 14}}>
+                      <AgoraLogo />
+                    </View>
+                    <View>
+                      <OpenAILogo />
+                    </View>
+                  </View>
+                ) : (
+                  <View style={style.logoContainerStyle}>
+                    <LogoComponent />
+                  </View>
+                )}
+                {isMobileUA() ? (
+                  <>
+                    <View style={style.centerLogoContainer}>
+                      <AgoraOpenAILogo />
+                      <Text style={style.mainTextStyle}>Agora & OpenAI</Text>
+                      <Text style={style.subTextStyle}>
+                        Agora Conversational AI demo built in partnership with
+                        OpenAI
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <></>
+                )}
                 <Spacer size={isDesktop ? 20 : 16} />
                 {/* <Text style={style.heading}>Agora Conversational AI</Text> */}
                 <Spacer size={20} />
@@ -271,9 +297,7 @@ const CustomCreate = () => {
               <View style={[style.btnContainer]}>
                 <PrimaryButton
                   iconName={'video-plus'}
-                  disabled={
-                    loading || !roomTitle?.trim() 
-                  }
+                  disabled={loading || !roomTitle?.trim()}
                   containerStyle={!isDesktop && {width: '100%'}}
                   onPress={() => {
                     if (!$config.BACKEND_ENDPOINT) {
@@ -380,6 +404,45 @@ const style = StyleSheet.create({
   },
   tooltipDefaultBgStyle: {
     padding: 5,
+  },
+  topLogoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+    flexShrink: 0,
+  },
+  centerLogoContainer: {
+    paddingTop: 60,
+    paddingBottom: 10,
+    display: 'flex',
+    paddingHorizontal: 8,
+    flexFirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
+    alignSelf: 'stretch',
+  },
+  mainTextStyle: {
+    color: '#FFF',
+    textAlign: 'center',
+    fontFamily: ThemeConfig.FontFamily.sansPro,
+    fontSize: 40,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 40,
+    letterSpacing: 1,
+  },
+  subTextStyle: {
+    color: '#FFFFFF' + hexadecimalTransparency['70%'],
+    textAlign: 'center',
+    fontFamily: ThemeConfig.FontFamily.sansPro,
+    fontSize: 18,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 21.6,
   },
 });
 
