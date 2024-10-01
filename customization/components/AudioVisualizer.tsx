@@ -24,61 +24,67 @@ export const DisconnectedView = ({isConnected}) => {
 		</View>
 	);
 };
-function createSilentAudioTrack() {
-	const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
 
-	const silentSource = audioContext.createBufferSource();
-	const buffer = audioContext.createBuffer(1, 1, audioContext.sampleRate);
-	const channel = buffer.getChannelData(0);
-	channel[0] = 0; // Set the first (and only) sample to 0
-	silentSource.buffer = buffer;
-	silentSource.loop = true;
 
-	const destination = audioContext.createMediaStreamDestination();
 
-	silentSource.connect(destination);
 
-	silentSource.start();
-
-	const silentTrack = destination.stream.getAudioTracks()[0];
-
-	return silentTrack;
+function createSilentAudioTrack(): MediaStreamTrack {
+  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const dst = audioContext.createMediaStreamDestination();
+  oscillator.connect(dst);
+  oscillator.start();
+  const track = dst.stream.getAudioTracks()[0];
+  return Object.assign(track, { enabled: false });
 }
 
-const mediaStream = new MediaStream();
-const emptyAudioTrack = createSilentAudioTrack();
-
-mediaStream.addTrack(emptyAudioTrack);
-
+const emptyAudioTrack = {
+  getMediaStreamTrack: () => createSilentAudioTrack(),
+  getVolumeLevel: () => 0,
+  setVolume: () => {},
+  setEnabled: () => {},
+  play: () => {},
+  stop: () => {},
+  setPlaybackDevice: () => Promise.resolve(),
+  getStats: () => ({ 
+    receiveBytes: 0, 
+    receivePackets: 0, 
+    receivePacketsLost: 0, 
+    state: "stopped" 
+  }),
+  isPlaying: false,
+  processTrack: {
+    on: () => {},
+    off: () => {}
+  },
+};
 
 const AudioVisualizer = ({audioTrack}) => { 
-
- return (
-	<View
-	style={{
-		flex: 1,
-		backgroundColor: $config.CARD_LAYER_1_COLOR,
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
-	}}
->
-<LiveAudioVisualizer
-	audioTrack={audioTrack}
-	width={300}
-	height={400}
-	fftSize={32}
-	barWidth={10}
-	minDecibels={-60}
-	maxDecibels={-10}
-	gap={2}
-	backgroundColor="transparent"
-	barColor="#00C2FF"
-	smoothingTimeConstant={0.9}
-	/>
-
-</View>)
-
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: $config.CARD_LAYER_1_COLOR,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <LiveAudioVisualizer
+        audioTrack={audioTrack || emptyAudioTrack}
+        width={300}
+        height={400}
+        fftSize={32}
+        barWidth={10}
+        minDecibels={-60}
+        maxDecibels={-10}
+        gap={2}
+        backgroundColor="transparent"
+        barColor="#00C2FF"
+        smoothingTimeConstant={0.9}
+      />
+    </View>
+  )
 }
 
 

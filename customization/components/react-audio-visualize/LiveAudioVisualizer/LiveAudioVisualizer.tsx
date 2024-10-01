@@ -83,7 +83,6 @@ const LiveAudioVisualizer: (props: Props) => ReactElement = ({
 				setAnalyser(null);
 				setAudioSource(null);
 			}
-			drawInitVisualization()
 			return;
 		}
 
@@ -126,26 +125,6 @@ const LiveAudioVisualizer: (props: Props) => ReactElement = ({
 		}
 	}, [analyser, audioContext, audioTrack]);
 
-	const drawInitVisualization = useCallback(() => {
-		if (!canvasRef.current) return;
-	
-		const canvas = canvasRef.current;
-		const ctx = canvas.getContext('2d');
-		if (!ctx) return;
-	
-		const barCount = Math.floor(canvas.width / (barWidth + gap));
-		const dataPoints = new Array(barCount).fill(0).map(() => Math.random() * 10); // Lower values for a "quiet" look
-	
-		draw(
-		  dataPoints,
-		  canvas,
-		  barWidth,
-		  gap,
-		  backgroundColor,
-		  barColor,
-		);
-	  }, [barWidth, gap, backgroundColor, barColor]);
-	
 
 	const processFrequencyData = (data: Uint8Array): void => {
 		if (!canvasRef.current) return;
