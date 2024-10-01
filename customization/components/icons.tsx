@@ -26,3 +26,30 @@ export const EndCall = () => (
     </defs>
   </svg>
 )
+
+export const DisconnectedIconMobile = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="254" height="255" viewBox="0 0 254 255" fill="none">
+<path opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" d="M127 254.5C197.14 254.5 254 197.64 254 127.5C254 57.3598 197.14 0.5 127 0.5C56.8598 0.5 0 57.3598 0 127.5C0 197.64 56.8598 254.5 127 254.5ZM127.001 240.244C189.267 240.244 239.744 189.767 239.744 127.501C239.744 65.2346 189.267 14.7578 127.001 14.7578C64.7346 14.7578 14.2578 65.2346 14.2578 127.501C14.2578 189.767 64.7346 240.244 127.001 240.244Z" fill="white"/>
+</svg>
+)
+
+export const DisconnectedIconDesktop = () => (
+<svg
+				width="500"
+				height="500"
+				viewBox="0 0 500 500"
+				fill="#00C2FF"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<circle
+					cx="250"
+					cy="250"
+					r="200"
+					stroke="white"
+					stroke-width="20"
+					fill="transparent"
+          opacity={0.5}
+				/>
+			</svg>
+
+ )
