@@ -20,6 +20,7 @@ import Bottombar from './components/Bottombar'
 import CustomCreate from './components/CustomCreate'
 import {AI_AGENT_UID} from "./components/AgentControls/const"
 import {ActiveSpeakerAnimation } from "./components/LocalAudioWave"
+import MobileTopBar from './components/mobile/Topbar'
 import MobileLayoutComponent from "./components/mobile/MobileLayoutComponent";
 
 const Topbar = () => {
@@ -112,7 +113,7 @@ const customization = customize({
 					},
 				];
 			},
-			topToolBar: Topbar,
+			topToolBar: isMobileUA() ? MobileTopBar : Topbar,
 			bottomToolBar: Bottombar,
 		},
 	},
