@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import RtcEngine from "bridge/rtc/webNg";
-import {ILocalAudioTrack, IMicrophoneAudioTrack} from 'agora-rtc-sdk-ng'
-import { Text, View, TouchableOpacity } from "react-native";
+import {ILocalAudioTrack} from 'agora-rtc-sdk-ng'
+import {  View, } from "react-native";
 import {
 	customize,
 	MaxVideoView,
@@ -31,11 +31,9 @@ const LayoutComponentE: LayoutComponent = () => {
     const [localTracks, setLocalTrack] = useState<ILocalAudioTrack | null>(null);
 
 	const { getLocalAudioStream} = useLocalAudio();
-	console.log(getLocalAudioStream(), 'local audio stream')
 	const isAudioEnabled = useIsAudioEnabled();
 	const connected = activeUids.includes(AI_AGENT_UID);
 	console.log({ activeUids }, "active uids");
-	const castedEngine = RtcEngineUnsafe as unknown as RtcEngine;
 
 	useEffect(() => {
 		if(getLocalAudioStream()){
