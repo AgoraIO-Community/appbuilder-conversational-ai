@@ -1,11 +1,12 @@
 import RtcEngine from "bridge/rtc/webNg";
 import { AI_AGENT_UID } from "..";
-import { useContent, useLocalUid, useRtc } from "customization-api";
+import { isMobileUA, useContent, useLocalUid, useRtc } from "customization-api";
 import React, { useEffect, useRef } from "react";
 import { Text, View } from "react-native";
 import { LiveAudioVisualizer } from "./react-audio-visualize";
+import { DisconnectedIconDesktop, DisconnectedIconMobile } from "./icons";
 
-export const DisconnectedView = () => {
+export const DisconnectedView = ({isConnected}) => {
 	return (
 		<View
 			style={{
@@ -17,28 +18,13 @@ export const DisconnectedView = () => {
 			}}
 		>
 			{/* big circle that covers the parent view */}
-			<svg
-				width="500"
-				height="500"
-				viewBox="0 0 500 500"
-				fill="#00C2FF"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<circle
-					cx="250"
-					cy="250"
-					r="200"
-					stroke="#00C2FF"
-					stroke-width="40"
-					fill="transparent"
-				/>
-			</svg>
+			{isMobileUA() ? <DisconnectedIconMobile /> : <DisconnectedIconDesktop />}
+			<Text style={{color: '#B3B3B3', fontSize: 20, fontWeight: "400",marginTop: 20}}>{isConnected ? "" : "Not Joined"}</Text>
 		</View>
 	);
 };
-
 function createSilentAudioTrack() {
-	const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+	const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
 
 	const silentSource = audioContext.createBufferSource();
 	const buffer = audioContext.createBuffer(1, 1, audioContext.sampleRate);

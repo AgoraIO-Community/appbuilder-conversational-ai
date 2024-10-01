@@ -7,7 +7,7 @@ import {
 	MaxVideoView,
 	useContent,
 	useLocalUid,
-	LayoutComponent,
+	type LayoutComponent,
 	useRtc,
 	useLocalAudio,
 	useIsAudioEnabled,
@@ -21,12 +21,13 @@ import CustomCreate from './components/CustomCreate'
 import {AI_AGENT_UID} from "./components/AgentControls/const"
 import {ActiveSpeakerAnimation } from "./components/LocalAudioWave"
 import MobileTopBar from './components/mobile/Topbar'
+import MobileLayoutComponent from "./components/mobile/MobileLayoutComponent";
 
 const Topbar = () => {
 	return null;
 };
 
-const LayoutComponentE: LayoutComponent = () => {
+const DesktopLayoutComponent: LayoutComponent = () => {
 	const localUid = useLocalUid();
 	const { defaultContent, activeUids } = useContent();
 	const { RtcEngineUnsafe } = useRtc();
@@ -60,25 +61,26 @@ const LayoutComponentE: LayoutComponent = () => {
 			<MaxVideoView
 				user={{
 					...defaultContent[AI_AGENT_UID],
-					name: "OpenAI" + (connected ? "" : " (disconnected)"),
+					name: "OpenAI",
 					video: false,
 				}}
 				CustomChild={() =>
-					connected ? <AudioVisualizer /> : <DisconnectedView />
+					connected ? <AudioVisualizer /> : <DisconnectedView isConnected={connected} />
 				}
+				hideMenuOptions={true}
 			/>
 			<View
 				style={{
-					position: "absolute",
-					bottom: 10,
-					right: 10,
-					display: "flex",
-					flexDirection: "row",
-					height: 200,
-					width: 300,
+						position: "absolute",
+						top: 10,
+						right: 10,
+						display: "flex",
+						flexDirection: "row",
+						height: 100,
+						width: 215,		
 				}}
 			>	
-				<MaxVideoView user={defaultContent[localUid]} />
+				<MaxVideoView user={defaultContent[localUid]} hideMenuOptions={true} avatarRadius={48}/>
 				<View style={{
 					position:"absolute",
 					width:100,
@@ -107,7 +109,7 @@ const customization = customize({
 						name: "Ai-Agent",
 						label: "Ai-Agent",
 						icon: "🤖",
-						component: LayoutComponentE,
+						component: isMobileUA() ? MobileLayoutComponent : DesktopLayoutComponent,
 					},
 				];
 			},

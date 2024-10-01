@@ -43,11 +43,15 @@ export interface VideoRendererProps {
   user: ContentInterface;
   isMax?: boolean;
   CustomChild?: React.ComponentType;
+  avatarRadius?:number
+  hideMenuOptions?:boolean
 }
 const VideoRenderer: React.FC<VideoRendererProps> = ({
   user,
   isMax = false,
   CustomChild,
+  avatarRadius = 100,
+  hideMenuOptions = false
 }) => {
   const {height, width} = useWindowDimensions();
   const {requestFullscreen} = useFullScreen();
@@ -67,7 +71,7 @@ const VideoRenderer: React.FC<VideoRendererProps> = ({
     isHovered &&
     currentLayout === getPinnedLayoutName();
   const [videoTileWidth, setVideoTileWidth] = useState(0);
-  const [avatarSize, setAvatarSize] = useState(100);
+  const [avatarSize, setAvatarSize] = useState(avatarRadius);
   const videoMoreMenuRef = useRef(null);
   const [actionMenuVisible, setActionMenuVisible] = React.useState(false);
   const {setVideoTileInViewPortState} = useVideoCall();
@@ -158,6 +162,7 @@ const VideoRenderer: React.FC<VideoRendererProps> = ({
 
   return (
     <>
+    
       <UserActionMenuOptionsOptions
         actionMenuVisible={actionMenuVisible}
         setActionMenuVisible={flag => {
@@ -170,7 +175,7 @@ const VideoRenderer: React.FC<VideoRendererProps> = ({
         user={user}
         btnRef={videoMoreMenuRef}
         from={'video-tile'}
-      />
+      /> 
       <PlatformWrapper isHovered={isHovered} setIsHovered={setIsHovered}>
         <View
           onLayout={({
@@ -179,7 +184,7 @@ const VideoRenderer: React.FC<VideoRendererProps> = ({
             },
           }) => {
             setVideoTileWidth(width);
-            setAvatarSize(Math.floor(width * 0.35));
+            setAvatarSize( avatarRadius ? avatarRadius : Math.floor(width * 0.35));
           }}
           style={[
             maxStyle.container,
@@ -361,7 +366,7 @@ const VideoRenderer: React.FC<VideoRendererProps> = ({
           )}
           {!(isScreenShareOnFullView || isWhiteboardOnFullScreen) &&
           // user.uid !== rtcProps?.screenShareUid &&
-          (isHovered || actionMenuVisible || isMobileUA()) ? (
+          ( hideMenuOptions === false && ( isHovered || actionMenuVisible || isMobileUA() ) ) ? (
             <MoreMenu
               videoMoreMenuRef={videoMoreMenuRef}
               setActionMenuVisible={setActionMenuVisible}
