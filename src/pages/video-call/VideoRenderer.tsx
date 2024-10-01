@@ -1,5 +1,5 @@
 import React, {useState, useRef, useContext, useEffect} from 'react';
-import {View, StyleSheet, useWindowDimensions} from 'react-native';
+import {View, StyleSheet, useWindowDimensions, ViewStyle} from 'react-native';
 import {
   PropsContext,
   DispatchContext,
@@ -45,13 +45,17 @@ export interface VideoRendererProps {
   CustomChild?: React.ComponentType;
   avatarRadius?:number
   hideMenuOptions?:boolean
+  containerStyle?: ViewStyle;
+  innerContainerStyle?: ViewStyle
 }
 const VideoRenderer: React.FC<VideoRendererProps> = ({
   user,
   isMax = false,
   CustomChild,
   avatarRadius = 100,
-  hideMenuOptions = false
+  hideMenuOptions = false,
+  containerStyle = {},
+  innerContainerStyle = {}
 }) => {
   const {height, width} = useWindowDimensions();
   const {requestFullscreen} = useFullScreen();
@@ -193,6 +197,7 @@ const VideoRenderer: React.FC<VideoRendererProps> = ({
               : user.video
               ? maxStyle.noVideoStyle
               : maxStyle.nonActiveContainerStyle,
+            containerStyle,
           ]}>
           {!showReplacePin && !showPinForMe && (
             <ScreenShareNotice uid={user.uid} isMax={isMax} />
@@ -334,6 +339,7 @@ const VideoRenderer: React.FC<VideoRendererProps> = ({
                       landscapeMode && isScreenShareOnFullView ? width : '100%',
                     borderRadius: 4,
                     overflow: 'hidden',
+                    ...innerContainerStyle
                   }}
                   key={user.uid}
                   landscapeMode={

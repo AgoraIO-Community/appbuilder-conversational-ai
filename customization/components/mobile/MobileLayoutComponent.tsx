@@ -50,10 +50,11 @@ const MobileLayoutComponent: LayoutComponent = () => {
 				flex: 1,
 				display: "flex",
 				flexDirection: "column",
-				borderRadius: 10,
 			}}
 		>
 			<MaxVideoView
+				containerStyle={{borderRadius:12, borderWidth:0}}
+				innerContainerStyle={{backgroundColor: '#222'}}
 				user={{
 					...defaultContent[AI_AGENT_UID],
 					name: "OpenAI",
@@ -67,15 +68,15 @@ const MobileLayoutComponent: LayoutComponent = () => {
 			<View
 				style={{
 					position: "absolute",
-					top: 10,
-					right: 10,
+					top: 8,
+					right: 8,
 					display: "flex",
 					flexDirection: "row",
 					height: 100,
 					width: 215,
 				}}
 			>	
-				<MaxVideoView user={defaultContent[localUid]} avatarRadius={48} hideMenuOptions={true} />
+				<MaxVideoView containerStyle={{borderRadius:8,borderWidth:0}}  user={defaultContent[localUid]} avatarRadius={48} hideMenuOptions={true} />
 				<View style={{
 					position:"absolute",
 					width:100,

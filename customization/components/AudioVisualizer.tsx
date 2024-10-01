@@ -12,7 +12,7 @@ export const DisconnectedView = ({isConnected}) => {
 		<View
 			style={{
 				flex: 1,
-				backgroundColor: $config.CARD_LAYER_1_COLOR,
+				backgroundColor: '#222',
 				display: "flex",
 				alignItems: "center",
 				justifyContent: "center",
@@ -64,7 +64,7 @@ const AudioVisualizer = ({audioTrack}) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: $config.CARD_LAYER_1_COLOR,
+        backgroundColor: '#222',
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
