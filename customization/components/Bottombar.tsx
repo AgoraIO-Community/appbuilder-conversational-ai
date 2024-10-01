@@ -1,9 +1,11 @@
 import { ToolbarPreset, ToolbarComponents, useSidePanel, SidePanelType, useRoomInfo,ThemeConfig, isMobileUA } from "customization-api";
-import React,{ useEffect, useState }  from "react";
+import React,{ useEffect, useState, useRef }  from "react";
 import { Text, View, TouchableOpacity,Image } from "react-native";
 import { AgentControl } from "./AgentControls";
 import { AgentProvider } from './AgentControls/AgentContext';
 import { LogoIcon } from "./icons";
+import { useMuteToggleLocal, MUTE_LOCAL_TYPE, useRtc } from "customization-api";
+
 
 export const LogoComponent = () => {
   return(
@@ -38,11 +40,23 @@ const Bottombar = () => {
     ParticipantCountToolbarItem,
   } = ToolbarComponents;
   const { setSidePanel } = useSidePanel();
+  const {RtcEngineUnsafe} = useRtc()
+  const count = useRef<number>(0)
   const { data } = useRoomInfo();
   const [clientId, setClientId] = useState<string | null>(null);
+  const muteToggleLocal = useMuteToggleLocal();
+
   useEffect(() => {
     !isMobileUA() && setSidePanel(SidePanelType.Settings)
   }, [])
+
+  useEffect(() => {
+    if(isMobileUA() && count.current < 2){
+      muteToggleLocal(MUTE_LOCAL_TYPE.audio)
+      count.current += 1
+    }
+  }, [RtcEngineUnsafe])
+
   return (
     <AgentProvider>
       <ToolbarPreset
