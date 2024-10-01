@@ -55,7 +55,7 @@ const connectToAIAgent = async (
     }
 };
 
-export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) => {
+export const AgentControl: React.FC<{channel_name: string, style: object}> = ({channel_name,style}) => {
     const {agentConnectionState, setAgentConnectionState} = useContext(AgentContext);
     const [clientId, setClientId] = useState<string | null>(null);
     // console.log("X-Client-ID state", clientId)
@@ -224,8 +224,8 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
           
             <Text style={{ 
               color: isEndAgent ? '#FF414D' : '#00C2FF',
-              fontFamily:ThemeConfig.FontFamily.sansPro
-
+              fontFamily:ThemeConfig.FontFamily.sansPro,
+              ...style
             }}>{`${AI_AGENT_STATE[agentConnectionState]}` }</Text>
         </TouchableOpacity>
         </div>
