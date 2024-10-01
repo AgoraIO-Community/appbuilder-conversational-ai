@@ -81,7 +81,7 @@ const LayoutComponentE: LayoutComponent = () => {
 					position:"absolute",
 					width:100,
 					height:50,
-					bottom:13,
+					bottom:16,
 					right:-38,
 				}}>
 				{
