@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {MobileTopBarLogo, SettingsIcon} from '../icons';
+import {LogoIcon, MobileTopBarLogo, SettingsIcon} from '../icons';
 import {SidePanelType, ThemeConfig, useSidePanel} from 'customization-api';
 
 const MobileTopbar = () => {
@@ -9,7 +9,7 @@ const MobileTopbar = () => {
     <View style={style.rootStyle}>
       <View style={style.containerStyle}>
         <View style={style.logContainerStyle}>
-          <MobileTopBarLogo />
+          <LogoIcon />
         </View>
         <Text style={style.textStyle}>Agora & OpenAI Demo</Text>
       </View>
@@ -46,8 +46,8 @@ const style = StyleSheet.create({
     paddingRight: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 34,
-    backgroundColor: '#333',
+  
+   
   },
   textStyle: {
     color: '#C3C3C3',
