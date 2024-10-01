@@ -29,7 +29,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingBottom: 20,
   },
   containerStyle: {
     display: 'flex',
