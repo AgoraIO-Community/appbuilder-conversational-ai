@@ -424,7 +424,7 @@ const style = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 20,
+    gap: 6,
     flexShrink: 0,
   },
   centerLogoContainer: {
