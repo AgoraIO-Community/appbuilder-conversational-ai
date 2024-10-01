@@ -207,7 +207,7 @@ const CustomCreate = () => {
           ) : (
             <></>
           )}
-          <ScrollView contentContainerStyle={isMobileUA() ? style.mainMobile : style.main}>
+          <View style={isMobileUA() ? style.mainMobile : style.main}>
             <Card cardContainerStyle={isMobileUA() ? style.mobileContainerStyle : {}}>
               <View>
                 {isMobileUA() ? (
@@ -224,8 +224,9 @@ const CustomCreate = () => {
                     <LogoComponent />
                   </View>
                 )}
+
                 {isMobileUA() ? (
-                  <>
+                  <View>
                     <View style={style.centerLogoContainer}>
                       <AgoraOpenAILogo />
                       <Text style={style.mainTextStyle}>Agora & OpenAI</Text>
@@ -234,13 +235,39 @@ const CustomCreate = () => {
                         OpenAI
                       </Text>
                     </View>
-                  </>
+                    <Spacer size={40} />
+                    <Input
+                  maxLength={maxInputLimit}
+                  labelStyle={style.inputLabelStyle}
+                  label={'Channel Name'}
+                  value={roomTitle}
+                  placeholder={'Channal Name'}
+                  onChangeText={text => onChangeRoomTitle(text)}
+                  onSubmitEditing={() => {
+                    if (!roomTitle?.trim() || !displayName?.trim()) {
+                      return;
+                    } else {
+                      if (!$config.BACKEND_ENDPOINT) {
+                        showError();
+                      } else {
+                        // !roomTitle?.trim() &&
+                        //   onChangeRoomTitle(randomRoomTitle);
+                        createRoomAndNavigateToShare(
+                          roomTitle?.trim(),
+                          pstnToggle,
+                          !coHostToggle,
+                        );
+                      }
+                    }
+                  }}
+                />
+                  </View>
                 ) : (
                   <></>
                 )}
                 <Spacer size={isDesktop ? 20 : 16} />
                 {/* <Text style={style.heading}>Agora Conversational AI</Text> */}
-                {isMobileUA() && <Spacer size={60} />}
+  
                 {/* <Input
                   maxLength={maxInputLimit}
                   labelStyle={style.inputLabelStyle}
@@ -267,7 +294,7 @@ const CustomCreate = () => {
                   }}
                 />
                 <Spacer size={40} /> */}
-                <Input
+                {!isMobileUA() &&<Input
                   maxLength={maxInputLimit}
                   labelStyle={style.inputLabelStyle}
                   label={'Channel Name'}
@@ -291,7 +318,7 @@ const CustomCreate = () => {
                       }
                     }
                   }}
-                />
+                />}
                 <Spacer size={40} />
               </View>
               <View style={[style.btnContainer]}>
@@ -316,7 +343,7 @@ const CustomCreate = () => {
                 />
               </View>
             </Card>
-          </ScrollView>
+          </View>
         </View>
       ) : (
         <></>
@@ -428,7 +455,7 @@ const style = StyleSheet.create({
     flexShrink: 0,
   },
   centerLogoContainer: {
-    marginTop: 80,
+
     paddingBottom: 10,
     display: 'flex',
     paddingHorizontal: 8,
