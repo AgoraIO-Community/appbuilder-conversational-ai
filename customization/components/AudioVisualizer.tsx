@@ -6,6 +6,7 @@ import { Text, View } from "react-native";
 import { LiveAudioVisualizer } from "./react-audio-visualize";
 import { DisconnectedIconDesktop, DisconnectedIconMobile } from "./icons";
 
+
 export const DisconnectedView = ({isConnected}) => {
 	return (
 		<View
@@ -49,70 +50,36 @@ const emptyAudioTrack = createSilentAudioTrack();
 
 mediaStream.addTrack(emptyAudioTrack);
 
-const AudioVisualizer = (props) => {
-	const mediaStreamRef = useRef<MediaStream>(mediaStream);
-	const mediaRecorderRef = useRef<MediaRecorder>(
-		new MediaRecorder(mediaStreamRef.current),
-	);
-	const { RtcEngineUnsafe } = useRtc();
-	const local = useLocalUid();
-	const { activeUids } = useContent();
-	const castedEngine = RtcEngineUnsafe as unknown as RtcEngine;
 
-	useEffect(() => {
-		// const uid = activeUids.filter(
-		// 	(uid) => uid !== AI_AGENT_UID && uid !== local,
-		// )[0];
+const AudioVisualizer = ({audioTrack}) => { 
 
-		const uid = AI_AGENT_UID;
+ return (
+	<View
+	style={{
+		flex: 1,
+		backgroundColor: $config.CARD_LAYER_1_COLOR,
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+	}}
+>
+<LiveAudioVisualizer
+	audioTrack={audioTrack}
+	width={300}
+	height={400}
+	fftSize={32}
+	barWidth={10}
+	minDecibels={-60}
+	maxDecibels={-10}
+	gap={2}
+	backgroundColor="transparent"
+	barColor="#00C2FF"
+	smoothingTimeConstant={0.9}
+	/>
 
-		const track = castedEngine.remoteStreams
-			.get(uid)
-			?.audio?.getMediaStreamTrack();
+</View>)
 
-		// const track = castedEngine.localStream.audio?.getMediaStreamTrack();
+}
 
-		if (mediaStreamRef.current.getTracks().length > 0) {
-			mediaStreamRef.current.removeTrack(mediaStreamRef.current.getTracks()[0]);
-		}
-		if (track) {
-			console.log("track", mediaStreamRef.current.getTracks());
-			mediaStreamRef.current.addTrack(track);
-		} else {
-			console.log("empty track");
-			mediaStreamRef.current.addTrack(emptyAudioTrack);
-		}
-		if (mediaRecorderRef.current.state !== "recording") {
-			mediaRecorderRef.current.start();
-		}
-	}, [RtcEngineUnsafe, activeUids]);
 
-	return (
-		<>
-			<View
-				style={{
-					flex: 1,
-					backgroundColor: $config.CARD_LAYER_1_COLOR,
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
-				}}
-			>
-				<LiveAudioVisualizer
-					mediaRecorder={mediaRecorderRef.current}
-					width={300}
-					height={400}
-					fftSize={32}
-					barWidth={10}
-					minDecibels={-60}
-					maxDecibels={-10}
-					gap={2}
-					backgroundColor="transparent"
-					barColor="#00C2FF"
-					smoothingTimeConstant={0.9}
-				/>
-			</View>
-		</>
-	);
-};
 export default AudioVisualizer;
