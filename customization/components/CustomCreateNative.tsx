@@ -1,34 +1,27 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {Redirect} from '../../src/components/Router';
-import PrimaryButton from '../../src/atoms/PrimaryButton';
 import Toast from '../../react-native-toast-message';
 import {ErrorContext} from '../../src/components/common';
 import {
   isWebInternal,
-  maxInputLimit,
-  isMobileUA,
   trimText,
 } from '../../src/utils/common';
 import {useString} from '../../src/utils/useString';
 import useCreateRoom from '../../src/utils/useCreateRoom';
-import {CreateProvider} from '../../src/pages/create/useCreate';
 import {
   RoomInfoDefaultValue,
   useRoomInfo,
 } from '../../src/components/room-info/useRoomInfo';
-import Input from '../../src/atoms/Input';
 import Card from '../../src/atoms/Card';
-import Spacer from '../../src/atoms/Spacer';
 import ThemeConfig from '../../src/theme';
 import hexadecimalTransparency from '../../src/utils/hexadecimalTransparency';
 import {useSetRoomInfo} from '../../src/components/room-info/useSetRoomInfo';
-import IDPLogoutComponent from '../../src/auth/IDPLogoutComponent';
 import isSDK from '../../src/utils/isSDK';
 import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
 import { useUserName } from 'customization-api';
-import { AgoraLogo, AgoraOpenAILogo, OpenAILogo } from './icons';
+import { AgoraLogo, AgoraOpenAILogo, OpenAILogo, CallIcon } from './icons';
 
 const CustomCreateNative = () => {
   const {
@@ -43,8 +36,6 @@ const CustomCreateNative = () => {
   const createRoomFun = useCreateRoom();
   const {setRoomInfo} = useSetRoomInfo();
   const {setStore} = useContext(StorageContext);
-  const [displayName, setDisplayName] = useState('');
-  const [userName, setUserName] = useUserName();
   const loadingText = useString('loadingText')();
 
 
@@ -168,11 +159,9 @@ const CustomCreateNative = () => {
                     </Text>
                 </View>
               </View>
-              <View style={[style.btnContainer]}>
-                <PrimaryButton
-                  iconName={'video-plus'}
+                <TouchableOpacity
                   disabled={loading || !roomTitle?.trim()}
-                  containerStyle={{width: '100%'}}
+                  style={style.btnContainer}
                   onPress={() => {
                     if (!$config.BACKEND_ENDPOINT) {
                       showError();
@@ -186,9 +175,16 @@ const CustomCreateNative = () => {
                       );
                     }
                   }}
-                  text={loading ? loadingText : 'JOIN CHANNEL'}
-                />
-              </View>
+                > 
+                  <CallIcon fill='#111111'/>
+                  <Text style={{
+                    textAlign:'center',
+                    fontSize: 18,
+                    fontStyle: 'normal',
+                    fontWeight: '600',
+                    lineHeight: 18,
+                  }}>{loading ? loadingText : 'Join Call'}</Text>
+                </TouchableOpacity>
             </Card>
           </View>
         </View>
@@ -223,6 +219,16 @@ const style = StyleSheet.create({
   btnContainer: {
     width: '100%',
     alignItems: 'center',
+    display: 'flex',
+    flexDirection:'row',
+    height:56,
+    padding:20,
+    justifyContent: "center",
+    alignContent: "center",
+    gap: 8,
+    flex: '1 0 0', 
+    borderRadius: 4,
+    backgroundColor: '#00C2FF'
   },
   separator: {
     height: 1,
