@@ -202,7 +202,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object}> = ({c
     const isStartAgent = (agentConnectionState === AgentState.NOT_CONNECTED || agentConnectionState === AgentState.AGENT_REQUEST_FAILED)
     const isEndAgent = (agentConnectionState === AgentState.AGENT_CONNECTED || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED)
 
-    const backgroundColorStyle = isMobileUA() ? {backgroundColor: isEndAgent ? '#FF414D' : '#00C2FF'} : {}
+    const backgroundColorStyle = isMobileUA() ? {backgroundColor: isEndAgent ? '#FF414D' : '#00C2FF', height: 72} : {}
     const fontcolorStyle = isMobileUA() ? {color: '#FFF'} : {color: isEndAgent ? '#FF414D' : '#00C2FF'}
     return(
         <div>
