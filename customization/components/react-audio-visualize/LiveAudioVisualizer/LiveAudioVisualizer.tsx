@@ -6,18 +6,15 @@ import React, {
 	useState,
 } from "react";
 import { calculateBarData, draw } from "./utils";
+import { ILocalAudioTrack, IRemoteAudioTrack } from 'agora-rtc-sdk-ng'
 
 export interface Props {
 	/**
-	 * Media recorder who's stream needs to visualized
-	 */
-	mediaRecorder: MediaRecorder;
-	/**
-	 * Width of the visualization. Default" "100%"
+	 * Width of the visualization. Default: "100%"
 	 */
 	width?: number | string;
 	/**
-	 * Height of the visualization. Default" "100%"
+	 * Height of the visualization. Default: "100%"
 	 */
 	height?: number | string;
 	/**
@@ -25,59 +22,41 @@ export interface Props {
 	 */
 	barWidth?: number;
 	/**
-	 * Gap between each bar in the visualization. Default `1`
+	 * Gap between each bar in the visualization. Default: `1`
 	 */
 	gap?: number;
 	/**
-	 * BackgroundColor for the visualization: Default `transparent`
+	 * BackgroundColor for the visualization: Default: `transparent`
 	 */
 	backgroundColor?: string;
 	/**
-	 *  Color of the bars drawn in the visualization. Default: `"rgb(160, 198, 255)"`
+	 * Color of the bars drawn in the visualization. Default: `"rgb(160, 198, 255)"`
 	 */
 	barColor?: string;
 	/**
 	 * An unsigned integer, representing the window size of the FFT, given in number of samples.
-	 * A higher value will result in more details in the frequency domain but fewer details in the amplitude domain.
-	 * For more details {@link https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/fftSize MDN AnalyserNode: fftSize property}
 	 * Default: `1024`
 	 */
-	fftSize?:
-		| 32
-		| 64
-		| 128
-		| 256
-		| 512
-		| 1024
-		| 2048
-		| 4096
-		| 8192
-		| 16384
-		| 32768;
+	fftSize?: 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096 | 8192 | 16384 | 32768;
 	/**
 	 * A double, representing the maximum decibel value for scaling the FFT analysis data
-	 * For more details {@link https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/maxDecibels MDN AnalyserNode: maxDecibels property}
 	 * Default: `-10`
 	 */
 	maxDecibels?: number;
 	/**
-	 * A double, representing the minimum decibel value for scaling the FFT analysis data, where 0 dB is the loudest possible sound
-	 * For more details {@link https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/minDecibels MDN AnalyserNode: minDecibels property}
+	 * A double, representing the minimum decibel value for scaling the FFT analysis data
 	 * Default: `-90`
 	 */
 	minDecibels?: number;
 	/**
 	 * A double within the range 0 to 1 (0 meaning no time averaging). The default value is 0.8.
-	 * If 0 is set, there is no averaging done, whereas a value of 1 means "overlap the previous and current buffer quite a lot while computing the value",
-	 * which essentially smooths the changes across
-	 * For more details {@link https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/smoothingTimeConstant MDN AnalyserNode: smoothingTimeConstant property}
 	 * Default: `0.4`
 	 */
 	smoothingTimeConstant?: number;
+	audioTrack?: ILocalAudioTrack | IRemoteAudioTrack;
 }
 
 const LiveAudioVisualizer: (props: Props) => ReactElement = ({
-	mediaRecorder,
 	width = "100%",
 	height = "100%",
 	barWidth = 2,
@@ -88,68 +67,64 @@ const LiveAudioVisualizer: (props: Props) => ReactElement = ({
 	maxDecibels = -10,
 	minDecibels = -90,
 	smoothingTimeConstant = 0.4,
+	audioTrack
 }: Props) => {
-	const [context, setContext] = useState<AudioContext>();
+	const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 	const [audioSource, setAudioSource] = useState<MediaStreamAudioSourceNode>();
 	const [analyser, setAnalyser] = useState<AnalyserNode>();
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
-		if (!mediaRecorder.stream) return;
+		if (!audioTrack) {
+			// Clean up if track is null
+			if (audioContext) {
+				audioContext.state !== 'closed' && audioContext.close();
+				setAudioContext(null);
+				setAnalyser(null);
+				setAudioSource(null);
+			}
+			return;
+		}
 
-		const ctx = new AudioContext();
-		const analyserNode = ctx.createAnalyser();
-		setAnalyser(analyserNode);
-		analyserNode.fftSize = fftSize;
-		analyserNode.minDecibels = minDecibels;
-		analyserNode.maxDecibels = maxDecibels;
-		analyserNode.smoothingTimeConstant = smoothingTimeConstant;
-		const source = ctx.createMediaStreamSource(mediaRecorder.stream);
-		source.connect(analyserNode);
-		setContext(ctx);
+		const newAudioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+		const newAnalyser = newAudioContext.createAnalyser();
+		newAnalyser.fftSize = fftSize;
+		newAnalyser.minDecibels = minDecibels;
+		newAnalyser.maxDecibels = maxDecibels;
+		newAnalyser.smoothingTimeConstant = smoothingTimeConstant;
+
+		const source = newAudioContext.createMediaStreamSource(new MediaStream([audioTrack.getMediaStreamTrack()]));
+		source.connect(newAnalyser);
+
+		setAudioContext(newAudioContext);
+		setAnalyser(newAnalyser);
 		setAudioSource(source);
 
 		return () => {
 			source.disconnect();
-			analyserNode.disconnect();
-			ctx.state !== "closed" && ctx.close();
+			newAnalyser.disconnect();
+			newAudioContext.state !== "closed" && newAudioContext.close();
 		};
-	}, [mediaRecorder.stream]);
+	}, [audioTrack, fftSize, minDecibels, maxDecibels, smoothingTimeConstant]);
 
 	useEffect(() => {
-		if (analyser && mediaRecorder.state === "recording") {
-			report();
+		if (analyser && audioTrack) {
+			requestAnimationFrame(report);
 		}
-	}, [analyser, mediaRecorder.state]);
+	}, [analyser, audioTrack]);
 
 	const report = useCallback(() => {
-		if (!analyser || !context) return;
+		if (!analyser || !audioContext || !audioTrack) return;
 
-		const data = new Uint8Array(analyser?.frequencyBinCount);
+		const data = new Uint8Array(analyser.frequencyBinCount);
+		analyser.getByteFrequencyData(data);
+		processFrequencyData(data);
 
-		if (mediaRecorder.state === "recording") {
-			analyser?.getByteFrequencyData(data);
-			processFrequencyData(data);
+		if (audioTrack.isPlaying) {
 			requestAnimationFrame(report);
-		} else if (mediaRecorder.state === "paused") {
-			processFrequencyData(data);
-		} else if (
-			mediaRecorder.state === "inactive" &&
-			context.state !== "closed"
-		) {
-			context.close();
 		}
-	}, [analyser, context?.state]);
+	}, [analyser, audioContext, audioTrack]);
 
-	useEffect(() => {
-		return () => {
-			if (context && context.state !== "closed") {
-				context.close();
-			}
-			audioSource?.disconnect();
-			analyser?.disconnect();
-		};
-	}, []);
 
 	const processFrequencyData = (data: Uint8Array): void => {
 		if (!canvasRef.current) return;

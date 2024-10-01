@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import RtcEngine from "bridge/rtc/webNg";
-import {ILocalAudioTrack} from 'agora-rtc-sdk-ng'
+import {ILocalAudioTrack, IRemoteAudioTrack} from 'agora-rtc-sdk-ng'
 import {  View, } from "react-native";
 import {
 	customize,
@@ -18,6 +18,7 @@ import AudioVisualizer, {
 } from "./components/AudioVisualizer";
 import Bottombar from './components/Bottombar'
 import CustomCreate from './components/CustomCreate'
+import CustomCreateNative from './components/CustomCreateNative'
 import {AI_AGENT_UID} from "./components/AgentControls/const"
 import {ActiveSpeakerAnimation } from "./components/LocalAudioWave"
 import MobileTopBar from './components/mobile/Topbar'
@@ -33,8 +34,9 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 	const { defaultContent, activeUids } = useContent();
 	const { RtcEngineUnsafe } = useRtc();
     const [localTracks, setLocalTrack] = useState<ILocalAudioTrack | null>(null);
+	const [remoteTrack, setRemoteTrack] = useState<IRemoteAudioTrack | null>(null);
 
-	const { getLocalAudioStream} = useLocalAudio();
+	const { getLocalAudioStream,getRemoteAudioStream} = useLocalAudio();
 	const isAudioEnabled = useIsAudioEnabled();
 	const connected = activeUids.includes(AI_AGENT_UID);
 	console.log({ activeUids }, "active uids");
@@ -48,6 +50,13 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 	useEffect(() => {
 
 	}, [isAudioEnabled])
+
+	useEffect(() => {
+		if(getRemoteAudioStream(AI_AGENT_UID)){
+			setRemoteTrack(getRemoteAudioStream(AI_AGENT_UID))
+		}
+		
+	}, [activeUids])
 
 
 	return (
@@ -66,7 +75,7 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 					video: false,
 				}}
 				CustomChild={() =>
-					connected ? <AudioVisualizer /> : <DisconnectedView isConnected={connected} />
+					connected ? <AudioVisualizer audioTrack={remoteTrack} /> : <DisconnectedView isConnected={connected} />
 				}
 				hideMenuOptions={true}
 			/>
@@ -92,7 +101,7 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 				{
 				localTracks && 
 				isAudioEnabled(localUid) &&
-				<ActiveSpeakerAnimation audioTrack={localTracks} isMuted={!isAudioEnabled(localUid)} />
+				<ActiveSpeakerAnimation audioTrack={localTracks} isMuted={!isAudioEnabled(localUid)} />     
 				}
 				</View>
 			</View>
@@ -102,7 +111,7 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 
 const customization = customize({
 	components: {
-		create: CustomCreate,
+		create: isMobileUA() ? CustomCreateNative : CustomCreate,
 		videoCall: {
 			customLayout() {
 				return [

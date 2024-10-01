@@ -1,5 +1,5 @@
 import { ToolbarPreset, ToolbarComponents, useSidePanel, SidePanelType, useRoomInfo,ThemeConfig, isMobileUA } from "customization-api";
-import React,{ useEffect }  from "react";
+import React,{ useEffect, useState }  from "react";
 import { Text, View, TouchableOpacity,Image } from "react-native";
 import { AgentControl } from "./AgentControls";
 import { AgentProvider } from './AgentControls/AgentContext';
@@ -39,7 +39,7 @@ const Bottombar = () => {
   } = ToolbarComponents;
   const { setSidePanel } = useSidePanel();
   const { data } = useRoomInfo();
-
+  const [clientId, setClientId] = useState<string | null>(null);
   useEffect(() => {
     !isMobileUA() && setSidePanel(SidePanelType.Settings)
   }, [])
@@ -72,7 +72,8 @@ const Bottombar = () => {
           "connect-agent": {
             align: "end",
             label: 'Agent',
-            component: () =>  <AgentControl channel_name={data.channel} style={{}}/>,
+            component: () =>  <AgentControl channel_name={data.channel}   clientId={clientId} 
+            setClientId={setClientId} />,
             order: 3
           },
           'local-audio':{ align: 'end', order: 1},

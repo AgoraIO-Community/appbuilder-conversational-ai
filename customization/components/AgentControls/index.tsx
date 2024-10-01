@@ -55,9 +55,8 @@ const connectToAIAgent = async (
     }
 };
 
-export const AgentControl: React.FC<{channel_name: string, style: object}> = ({channel_name,style}) => {
+export const AgentControl: React.FC<{channel_name: string, style: object, clientId: string, setClientId: () => void}> = ({channel_name,style,clientId,setClientId}) => {
     const {agentConnectionState, setAgentConnectionState} = useContext(AgentContext);
-    const [clientId, setClientId] = useState<string | null>(null);
     // console.log("X-Client-ID state", clientId)
     // const { users } = useContext(UserContext)
     const {  activeUids:users } = useContent();
@@ -114,8 +113,10 @@ export const AgentControl: React.FC<{channel_name: string, style: object}> = ({c
           }
           // disconnect agent with agent is already connected or when earlier disconnect failed
           if(agentConnectionState === AgentState.AGENT_CONNECTED || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED){
-            await endcall()
-            return // check later
+            if(isMobileUA()){
+              await endcall()
+              return // check later
+            }
             try{
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_REQUEST);
               await connectToAIAgent('stop_agent', channel_name, clientId || undefined);
@@ -202,7 +203,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object}> = ({c
     const isStartAgent = (agentConnectionState === AgentState.NOT_CONNECTED || agentConnectionState === AgentState.AGENT_REQUEST_FAILED)
     const isEndAgent = (agentConnectionState === AgentState.AGENT_CONNECTED || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED)
 
-    const backgroundColorStyle = isMobileUA() ? {backgroundColor: isEndAgent ? '#FF414D' : '#00C2FF'} : {}
+    const backgroundColorStyle = isMobileUA() ? {backgroundColor: isEndAgent ? '#FF414D' : '#00C2FF', height: 72} : {}
     const fontcolorStyle = isMobileUA() ? {color: '#FFF'} : {color: isEndAgent ? '#FF414D' : '#00C2FF'}
     return(
         <div>

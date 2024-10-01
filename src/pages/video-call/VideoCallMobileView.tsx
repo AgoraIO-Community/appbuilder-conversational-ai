@@ -275,7 +275,7 @@ export default VideoCallMobileView;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 20,
     flex: 1,
   },

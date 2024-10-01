@@ -50,6 +50,8 @@ export interface LocalAudioMuteProps {
   disabled?: boolean;
   showWarningIcon?: boolean;
   iconBGColor?: string;
+  iconSize?: number;
+  containerStyle?: object;
 }
 
 function LocalAudioMute(props: LocalAudioMuteProps) {
@@ -101,12 +103,25 @@ function LocalAudioMute(props: LocalAudioMuteProps) {
     ? micButtonLabel(I18nDeviceStatus.ON)
     : micButtonLabel(I18nDeviceStatus.OFF);
 
+  let iconSize = props?.iconSize
+    ? {
+        iconSize: props?.iconSize,
+      }
+    : {};
+
+  let containerStyle = props?.containerStyle
+    ? {
+        iconContainerStyle: props?.containerStyle,
+      }
+    : {};
+    
   let iconProps: IconButtonProps['iconProps'] = {
     showWarningIcon: permissionDenied && showWarningIcon ? true : false,
     name: isAudioEnabled ? 'mic-on' : 'mic-off',
-
     iconBackgroundColor: isAudioEnabled
-      ? props?.iconBGColor ? props.iconBGColor : $config.PRIMARY_ACTION_BRAND_COLOR
+      ? props?.iconBGColor
+        ? props.iconBGColor
+        : $config.PRIMARY_ACTION_BRAND_COLOR
       : '',
     tintColor: isAudioEnabled
       ? $config.PRIMARY_ACTION_TEXT_COLOR
@@ -118,6 +133,8 @@ function LocalAudioMute(props: LocalAudioMuteProps) {
     ...(props?.iconProps
       ? props.iconProps(isAudioEnabled, permissionDenied)
       : {}),
+    ...iconSize,
+    ...containerStyle,
   };
 
   let iconButtonProps: IconButtonProps = {
@@ -125,7 +142,7 @@ function LocalAudioMute(props: LocalAudioMuteProps) {
       ? props?.plainIconHoverEffect
         ? true
         : false
-      : false,
+      : false,    
     hoverEffectStyle: props?.plainIconHoverEffect
       ? {backgroundColor: $config.ICON_BG_COLOR, borderRadius: 20}
       : {},
