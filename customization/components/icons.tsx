@@ -35,15 +35,15 @@ export const DisconnectedIconMobile = () => (
 
 export const DisconnectedIconDesktop = () => (
 <svg
-				width="500"
-				height="500"
-				viewBox="0 0 500 500"
+				width="480"
+				height="480"
+				viewBox="0 0 440 440"
 				fill="#00C2FF"
 				xmlns="http://www.w3.org/2000/svg"
 			>
 				<circle
-					cx="250"
-					cy="250"
+					cx="220"
+					cy="220"
 					r="200"
 					stroke="white"
 					stroke-width="20"
@@ -53,3 +53,4 @@ export const DisconnectedIconDesktop = () => (
 			</svg>
 
  )
+

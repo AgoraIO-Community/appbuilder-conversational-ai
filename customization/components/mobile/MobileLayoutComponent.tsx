@@ -48,11 +48,11 @@ const MobileLayoutComponent: LayoutComponent = () => {
 			<MaxVideoView
 				user={{
 					...defaultContent[AI_AGENT_UID],
-					name: "OpenAI" + (connected ? "" : " (disconnected)"),
+					name: "OpenAI",
 					video: false,
 				}}
 				CustomChild={() =>
-					connected ? <AudioVisualizer /> : <DisconnectedView />
+					connected ? <AudioVisualizer /> : <DisconnectedView isConnected={connected} />
 				}
                 hideMenuOptions={true}
 			/>

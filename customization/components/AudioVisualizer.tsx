@@ -6,7 +6,7 @@ import { Text, View } from "react-native";
 import { LiveAudioVisualizer } from "./react-audio-visualize";
 import { DisconnectedIconDesktop, DisconnectedIconMobile } from "./icons";
 
-export const DisconnectedView = () => {
+export const DisconnectedView = ({isConnected}) => {
 	return (
 		<View
 			style={{
@@ -19,6 +19,7 @@ export const DisconnectedView = () => {
 		>
 			{/* big circle that covers the parent view */}
 			{isMobileUA() ? <DisconnectedIconMobile /> : <DisconnectedIconDesktop />}
+			<Text style={{color: '#B3B3B3', fontSize: 20, fontWeight: "400",marginTop: 20}}>{isConnected ? "" : "Not Joined"}</Text>
 		</View>
 	);
 };
