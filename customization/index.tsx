@@ -88,7 +88,11 @@ const LayoutComponentE: LayoutComponent = () => {
 					backgroundColor: $config.VIDEO_AUDIO_TILE_COLOR
 
 				}}>
-				{localTracks && isAudioEnabled(localUid) && <ActiveSpeakerAnimation audioTrack={localTracks} isMuted={!isAudioEnabled(localUid)} />}
+				{
+				localTracks && 
+				isAudioEnabled(localUid) &&
+				<ActiveSpeakerAnimation audioTrack={localTracks} isMuted={!isAudioEnabled(localUid)} />
+				}
 				</View>
 			</View>
 		</View>
