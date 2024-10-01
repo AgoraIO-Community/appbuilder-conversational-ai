@@ -18,6 +18,7 @@ import AudioVisualizer, {
 } from "./components/AudioVisualizer";
 import Bottombar from './components/Bottombar'
 import CustomCreate from './components/CustomCreate'
+import CustomCreateNative from './components/CustomCreateNative'
 import {AI_AGENT_UID} from "./components/AgentControls/const"
 import {ActiveSpeakerAnimation } from "./components/LocalAudioWave"
 import MobileTopBar from './components/mobile/Topbar'
@@ -102,7 +103,7 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 
 const customization = customize({
 	components: {
-		create: CustomCreate,
+		create: isMobileUA() ? CustomCreateNative : CustomCreate,
 		videoCall: {
 			customLayout() {
 				return [
