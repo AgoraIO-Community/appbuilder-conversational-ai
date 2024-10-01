@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { AgentContext } from './AgentContext';
 import Toast from "../../../react-native-toast-message/index";
 
-import { ThemeConfig, useContent, useEndCall } from "customization-api";
+import { isMobileUA, ThemeConfig, useContent, useEndCall } from "customization-api";
 import { CallIcon, EndCall } from '../icons';
 
 const connectToAIAgent = async (
@@ -201,6 +201,9 @@ export const AgentControl: React.FC<{channel_name: string, style: object}> = ({c
         || agentConnectionState === AgentState.AWAITING_JOIN)
     const isStartAgent = (agentConnectionState === AgentState.NOT_CONNECTED || agentConnectionState === AgentState.AGENT_REQUEST_FAILED)
     const isEndAgent = (agentConnectionState === AgentState.AGENT_CONNECTED || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED)
+
+    const backgroundColorStyle = isMobileUA() ? {backgroundColor: isEndAgent ? '#FF414D' : '#00C2FF'} : {}
+    const fontcolorStyle = isMobileUA() ? {color: '#FFF'} : {color: isEndAgent ? '#FF414D' : '#00C2FF'}
     return(
         <div>
         <TouchableOpacity
@@ -212,20 +215,21 @@ export const AgentControl: React.FC<{channel_name: string, style: object}> = ({c
                 alignItems: 'center',
                 gap: 8,
                 borderRadius: 40, 
-                borderWidth: 1, 
+                borderWidth: isMobileUA() ? 0 : 1, 
                 borderColor: isEndAgent ? '#FF414D' : '#00C2FF',
                 flexDirection:'row',
+                ...backgroundColorStyle
             }}        
             onPress={handleConnectionToggle}
 
             disabled={isLoading}
         >
-          {isLoading ? <ActivityIndicator size="small" color="#00C2FF" /> : isStartAgent ? <CallIcon/>: <EndCall />}
+          {isLoading ? <ActivityIndicator size="small" color={isMobileUA() ? "#FFFFFF" : "#00C2FF"} /> : isStartAgent ? <CallIcon fill={isMobileUA() ? '#FFFFFF' : '#00C2FF'} />: <EndCall fill={isMobileUA() ? '#FFFFFF' : '#FF414D'} />}
           
             <Text style={{ 
-              color: isEndAgent ? '#FF414D' : '#00C2FF',
               fontFamily:ThemeConfig.FontFamily.sansPro,
-              ...style
+              ...fontcolorStyle,
+              ...style,
             }}>{`${AI_AGENT_STATE[agentConnectionState]}` }</Text>
         </TouchableOpacity>
         </div>
