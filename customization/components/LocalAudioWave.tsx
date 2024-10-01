@@ -74,10 +74,10 @@ export const ActiveSpeakerAnimation = ({ audioTrack, isMuted }: { audioTrack: IL
   
         // Draw frequency bars
         const numberOfBars = Math.floor(analyser.frequencyBinCount / 10)
-        for (let i = 0; i < analyser.frequencyBinCount; i++) {
+        for (let i = 0; i < numberOfBars; i++) {
           barHeight = (dataArray[i] / 255) * canvas.height * 0.5;
   
-          const hue = ((i / analyser.frequencyBinCount) * 120) + 240;
+        //   const hue = ((i / analyser.frequencyBinCount) * 120) + 240;
           canvasCtx.fillStyle = '#00C2FF';
   
           canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);

@@ -81,10 +81,8 @@ const LayoutComponentE: LayoutComponent = () => {
 					position:"absolute",
 					width:100,
 					height:50,
-					bottom:16,
-					right:16,
-					backgroundColor: $config.VIDEO_AUDIO_TILE_COLOR
-
+					bottom:13,
+					right:-38,
 				}}>
 				{
 				localTracks && 
