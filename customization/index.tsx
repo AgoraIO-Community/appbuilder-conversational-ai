@@ -71,16 +71,16 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 			/>
 			<View
 				style={{
-						position: "absolute",
-						top: 10,
-						right: 10,
-						display: "flex",
-						flexDirection: "row",
-						height: 100,
-						width: 215,		
+					position: "absolute",
+					bottom: 10,
+					right: 10,
+					display: "flex",
+					flexDirection: "row",
+					height: 200,
+					width: 300,
 				}}
 			>	
-				<MaxVideoView user={defaultContent[localUid]} hideMenuOptions={true} avatarRadius={48}/>
+				<MaxVideoView user={defaultContent[localUid]} hideMenuOptions={true} />
 				<View style={{
 					position:"absolute",
 					width:100,
