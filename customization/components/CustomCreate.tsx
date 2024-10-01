@@ -207,8 +207,8 @@ const CustomCreate = () => {
           ) : (
             <></>
           )}
-          <ScrollView contentContainerStyle={style.main}>
-            <Card>
+          <ScrollView contentContainerStyle={isMobileUA() ? style.mainMobile : style.main}>
+            <Card cardContainerStyle={isMobileUA() ? style.mobileContainerStyle : {}}>
               <View>
                 {isMobileUA() ? (
                   <View style={style.topLogoContainer}>
@@ -240,7 +240,7 @@ const CustomCreate = () => {
                 )}
                 <Spacer size={isDesktop ? 20 : 16} />
                 {/* <Text style={style.heading}>Agora Conversational AI</Text> */}
-                <Spacer size={20} />
+                {isMobileUA() && <Spacer size={60} />}
                 {/* <Input
                   maxLength={maxInputLimit}
                   labelStyle={style.inputLabelStyle}
@@ -343,6 +343,19 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  mainMobile:{
+    paddingBottom:80,
+    paddingTop:66,
+    flex:1
+
+  },
+  mobileContainerStyle:{
+   backgroundColor:'transparent',
+   flex:1,
+   paddingBottom:0,
+   paddingTop:0
+
+  },
   heading: {
     fontSize: ThemeConfig.FontSize.medium,
     fontWeight: '700',
@@ -415,7 +428,7 @@ const style = StyleSheet.create({
     flexShrink: 0,
   },
   centerLogoContainer: {
-    paddingTop: 60,
+    marginTop: 80,
     paddingBottom: 10,
     display: 'flex',
     paddingHorizontal: 8,
