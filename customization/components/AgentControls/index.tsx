@@ -12,13 +12,13 @@ const connectToAIAgent = async (agentAction: 'start_agent' | 'stop_agent', chann
     // const apiUrl = '/api/proxy'; 
     const apiUrl = AGENT_PROXY_URL; 
     const requestBody = {
-      action: agentAction, 
+      // action: agentAction, 
       channel_name: channel_name,
       uid: AI_AGENT_UID
     };
     console.log({requestBody})
     try {
-      const response = await fetch(apiUrl, {
+      const response = await fetch(`${apiUrl}/${agentAction}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
