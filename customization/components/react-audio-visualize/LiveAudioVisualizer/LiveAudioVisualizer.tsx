@@ -125,6 +125,7 @@ const LiveAudioVisualizer: (props: Props) => ReactElement = ({
 		}
 	}, [analyser, audioContext, audioTrack]);
 
+
 	const processFrequencyData = (data: Uint8Array): void => {
 		if (!canvasRef.current) return;
 
