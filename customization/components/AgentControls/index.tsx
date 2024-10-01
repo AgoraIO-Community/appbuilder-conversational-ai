@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect,useState } from 'react';
 import { AI_AGENT_STATE, AIAgentState, AgentState, AI_AGENT_UID, AGENT_PROXY_URL} from "./const"
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { AgentContext } from './AgentContext';
@@ -7,22 +7,31 @@ import Toast from "../../../react-native-toast-message/index";
 import { ThemeConfig, useContent, useEndCall } from "customization-api";
 import { CallIcon, EndCall } from '../icons';
 
-const connectToAIAgent = async (agentAction: 'start_agent' | 'stop_agent', channel_name: string): Promise<void> => {
+const connectToAIAgent = async (
+  agentAction: 'start_agent' | 'stop_agent', 
+  channel_name: string,
+  clientId?:string): Promise<string | void> => {
 
     // const apiUrl = '/api/proxy'; 
     const apiUrl = AGENT_PROXY_URL; 
     const requestBody = {
-      action: agentAction, 
+      // action: agentAction, 
       channel_name: channel_name,
       uid: AI_AGENT_UID
     };
     console.log({requestBody})
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (agentAction === 'stop_agent' && clientId) {
+        headers['X-Client-ID'] = clientId;
+    }
+
     try {
-      const response = await fetch(apiUrl, {
+      const response = await fetch(`${apiUrl}/${agentAction}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: JSON.stringify(requestBody),
       });
   
@@ -32,11 +41,14 @@ const connectToAIAgent = async (agentAction: 'start_agent' | 'stop_agent', chann
 
       const data = await response.json();
 
-      console.log({data})
+      // console.log({data}, "X-Client-ID start stop")
       console.log(
         `AI agent ${agentAction === 'start_agent' ? 'connected' : 'disconnected'}`,
         data
       );
+      if (agentAction === 'start_agent' && data.clientID) {
+        return data.clientID;
+      }
     } catch (error) {
       console.error(`Failed to ${agentAction} AI agent connection:`, error);
       throw error;
@@ -45,6 +57,8 @@ const connectToAIAgent = async (agentAction: 'start_agent' | 'stop_agent', chann
 
 export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) => {
     const {agentConnectionState, setAgentConnectionState} = useContext(AgentContext);
+    const [clientId, setClientId] = useState<string | null>(null);
+    // console.log("X-Client-ID state", clientId)
     // const { users } = useContext(UserContext)
     const {  activeUids:users } = useContent();
     const endcall =  useEndCall();
@@ -58,7 +72,11 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
           if (agentConnectionState === AgentState.NOT_CONNECTED || agentConnectionState === AgentState.AGENT_REQUEST_FAILED){
             try{
               setAgentConnectionState(AgentState.REQUEST_SENT);
-              await connectToAIAgent('start_agent', channel_name);
+              const newClientId = await connectToAIAgent('start_agent', channel_name);
+              // console.log("response X-Client-ID", newClientId, typeof newClientId)
+              if(typeof newClientId === 'string'){
+                setClientId(newClientId);
+              }
               setAgentConnectionState(AgentState.AWAITING_JOIN);
             //   toast({title: "Agent requested to join"})
 
@@ -100,7 +118,7 @@ export const AgentControl: React.FC<{channel_name: string}> = ({channel_name}) =
             return // check later
             try{
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_REQUEST);
-              await connectToAIAgent('stop_agent', channel_name);
+              await connectToAIAgent('stop_agent', channel_name, clientId || undefined);
               setAgentConnectionState(AgentState.AWAITING_LEAVE);
             //   toast({ title: "Agent disconnecting..."})
               Toast.show({
