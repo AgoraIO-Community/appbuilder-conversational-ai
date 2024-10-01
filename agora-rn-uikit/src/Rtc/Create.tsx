@@ -196,7 +196,7 @@ const Create = ({
     ) {
       enableVideoAndAudioWithDisabledState();
     } else {
-      enableVideoAndAudioWithEnabledState();
+      enableVideoAndAudioWithDisabledState();
     }
   };
 
