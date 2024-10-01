@@ -226,7 +226,6 @@ const style = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     gap: 8,
-    flex: '1 0 0', 
     borderRadius: 4,
     backgroundColor: '#00C2FF'
   },
@@ -244,7 +243,7 @@ const style = StyleSheet.create({
     flexShrink: 0,
   },
   centerLogoContainer: {
-    paddingTop:150,
+    paddingTop:135,
     paddingBottom: 10,
     display: 'flex',
     paddingHorizontal: 8,
