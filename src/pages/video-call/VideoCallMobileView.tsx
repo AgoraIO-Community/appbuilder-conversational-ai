@@ -259,7 +259,10 @@ const VideoCallView = React.memo(() => {
                 includeDefaultItems={false}
               />
             ) : (
-              <BottombarComponent />
+              <>
+                <BottombarComponent />
+                <ActionSheet includeDefaultItems={false} items={{}} hideDefaultActionSheet={true}/>
+              </>
             )}
           </ActionSheetProvider>
         </ToolbarProvider>
@@ -285,7 +288,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   videoView: {
-    flex: 0.85,
+    flex: isMobileUA() ? 1 : 0.85,
     zIndex: 0,
     elevation: 0,
   },

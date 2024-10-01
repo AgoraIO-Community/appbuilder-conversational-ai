@@ -7,10 +7,11 @@ import {
 	MaxVideoView,
 	useContent,
 	useLocalUid,
-	LayoutComponent,
+	type LayoutComponent,
 	useRtc,
 	useLocalAudio,
-	useIsAudioEnabled
+	useIsAudioEnabled,
+	isMobileUA
 } from "customization-api";
 import AudioVisualizer, {
 	DisconnectedView,
@@ -19,12 +20,15 @@ import Bottombar from './components/Bottombar'
 import CustomCreate from './components/CustomCreate'
 import {AI_AGENT_UID} from "./components/AgentControls/const"
 import {ActiveSpeakerAnimation } from "./components/LocalAudioWave"
+import MobileTopBar from './components/mobile/Topbar'
+import MobileLayoutComponent from "./components/mobile/MobileLayoutComponent";
+import MobileBottombar from './components/mobile/Bottombar'
 
 const Topbar = () => {
 	return null;
 };
 
-const LayoutComponentE: LayoutComponent = () => {
+const DesktopLayoutComponent: LayoutComponent = () => {
 	const localUid = useLocalUid();
 	const { defaultContent, activeUids } = useContent();
 	const { RtcEngineUnsafe } = useRtc();
@@ -58,12 +62,13 @@ const LayoutComponentE: LayoutComponent = () => {
 			<MaxVideoView
 				user={{
 					...defaultContent[AI_AGENT_UID],
-					name: "OpenAI" + (connected ? "" : " (disconnected)"),
+					name: "OpenAI",
 					video: false,
 				}}
 				CustomChild={() =>
-					connected ? <AudioVisualizer /> : <DisconnectedView />
+					connected ? <AudioVisualizer /> : <DisconnectedView isConnected={connected} />
 				}
+				hideMenuOptions={true}
 			/>
 			<View
 				style={{
@@ -76,7 +81,7 @@ const LayoutComponentE: LayoutComponent = () => {
 					width: 300,
 				}}
 			>	
-				<MaxVideoView user={defaultContent[localUid]} />
+				<MaxVideoView user={defaultContent[localUid]} hideMenuOptions={true} />
 				<View style={{
 					position:"absolute",
 					width:100,
@@ -105,12 +110,12 @@ const customization = customize({
 						name: "Ai-Agent",
 						label: "Ai-Agent",
 						icon: "🤖",
-						component: LayoutComponentE,
+						component: isMobileUA() ? MobileLayoutComponent : DesktopLayoutComponent,
 					},
 				];
 			},
-			topToolBar: Topbar,
-			bottomToolBar: Bottombar,
+			topToolBar: isMobileUA() ? MobileTopBar : Topbar,
+			bottomToolBar: isMobileUA() ? MobileBottombar : Bottombar,
 		},
 	},
 });
