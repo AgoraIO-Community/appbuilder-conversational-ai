@@ -1,14 +1,15 @@
 import{ UID} from 'agora-rtc-sdk-ng';
+import { isMobileUA } from 'customization-api';
 
 export const AI_AGENT_STATE = {
     'NOT_CONNECTED': "Start Call",
-    'REQUEST_SENT': "Requesting agent join..", // loading - reg
-    'AWAITING_JOIN': "Agent will join shortly..", // loading
+    'REQUEST_SENT': isMobileUA() ? "Start Call": "Requesting agent join..", // loading - reg
+    'AWAITING_JOIN': isMobileUA() ? "Start Call": "Agent will join shortly..", // loading
     "AGENT_CONNECTED": "End Call",
     'AGENT_REQUEST_FAILED': 'Start Call',
-    'AGENT_DISCONNECT_REQUEST': 'Disconnecting agent...', // loading - req
+    'AGENT_DISCONNECT_REQUEST': isMobileUA() ? "End Call": 'Disconnecting agent...', // loading - req
     'AGENT_DISCONNECT_FAILED': 'End Call',
-    'AWAITING_LEAVE': "Bye Bye, Agent" // loading
+    'AWAITING_LEAVE': isMobileUA() ? "End Call": "Bye Bye, Agent" // loading
 } as const;
 
 export type AIAgentState = keyof typeof AI_AGENT_STATE

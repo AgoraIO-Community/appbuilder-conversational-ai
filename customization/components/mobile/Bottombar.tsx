@@ -15,7 +15,7 @@ const Bottombar = () => {
     <AgentProvider>
       <style type="text/css">{css}</style>
       <View style={style.containerStyle}>
-        <LocalAudioToolbarItem iconBGColor={"#00C2FF"} />
+        <LocalAudioToolbarItem iconBGColor={"#00C2FF"} iconSize={32} containerStyle={{padding:20}} />
         <AgentControl channel_name={data.channel} style={{fontSize:18,lineHeight:18}} />
       </View>
     </AgentProvider>
