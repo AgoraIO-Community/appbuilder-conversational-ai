@@ -85,20 +85,19 @@ export const DisconnectedIconMobile = () => (
 
 export const DisconnectedIconDesktop = () => (
 <svg
-				width="480"
-				height="480"
-				viewBox="0 0 440 440"
+				width="500"
+				height="500"
+				viewBox="0 0 500 500"
 				fill="#00C2FF"
 				xmlns="http://www.w3.org/2000/svg"
 			>
 				<circle
-					cx="220"
-					cy="220"
+					cx="250"
+					cy="250"
 					r="200"
-					stroke="white"
-					stroke-width="20"
+					stroke="#00C2FF"
+					stroke-width="40"
 					fill="transparent"
-          opacity={0.5}
 				/>
 			</svg>
 
