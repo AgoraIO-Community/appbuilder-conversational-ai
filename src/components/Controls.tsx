@@ -894,7 +894,7 @@ export const RaiseHandToolbarItem = props => {
 export const LocalAudioToolbarItem = props => {
   return (
     <ToolbarItem testID="localAudio-btn" toolbarProps={props}>
-      <LocalAudioMute showToolTip={true} />
+      <LocalAudioMute showToolTip={true} iconBGColor={props?.iconBGColor} />
     </ToolbarItem>
   );
 };

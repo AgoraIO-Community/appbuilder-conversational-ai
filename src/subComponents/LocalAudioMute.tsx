@@ -49,6 +49,7 @@ export interface LocalAudioMuteProps {
   render?: (onPress: () => void, isAudioEnabled: boolean) => JSX.Element;
   disabled?: boolean;
   showWarningIcon?: boolean;
+  iconBGColor?: string;
 }
 
 function LocalAudioMute(props: LocalAudioMuteProps) {
@@ -105,7 +106,7 @@ function LocalAudioMute(props: LocalAudioMuteProps) {
     name: isAudioEnabled ? 'mic-on' : 'mic-off',
 
     iconBackgroundColor: isAudioEnabled
-      ? $config.PRIMARY_ACTION_BRAND_COLOR
+      ? props?.iconBGColor ? props.iconBGColor : $config.PRIMARY_ACTION_BRAND_COLOR
       : '',
     tintColor: isAudioEnabled
       ? $config.PRIMARY_ACTION_TEXT_COLOR
