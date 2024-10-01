@@ -60,16 +60,12 @@ export const ActiveSpeakerAnimation = ({ audioTrack, isMuted }: { audioTrack: IL
           canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
           return;
         }
-        // Request next animation frame
         animationRef.current = requestAnimationFrame(draw);
-        // Slow down animation by only drawing every 3rd frame
         frameCountRef.current = (frameCountRef.current + 1) % 3;
         if (frameCountRef.current !== 0) return;
   
-        // Get frequency data
         analyser.getByteFrequencyData(dataArray);
   
-        // Clear the canvas
         canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
   
         const barWidth = (canvas.width / analyser.frequencyBinCount) * 5;
@@ -81,11 +77,9 @@ export const ActiveSpeakerAnimation = ({ audioTrack, isMuted }: { audioTrack: IL
         for (let i = 0; i < analyser.frequencyBinCount; i++) {
           barHeight = (dataArray[i] / 255) * canvas.height * 0.5;
   
-          // Calculate hue based on frequency
           const hue = ((i / analyser.frequencyBinCount) * 120) + 240;
           canvasCtx.fillStyle = '#00C2FF';
   
-          // Draw the bar
           canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
   
           x += barWidth + 1;
