@@ -196,7 +196,7 @@ const Create = ({
     ) {
       await enableVideoAndAudioWithDisabledState();
     } else {
-      await enableVideoAndAudioWithEnabledState();
+      await enableVideoAndAudioWithDisabledState();
     }
   };
 
