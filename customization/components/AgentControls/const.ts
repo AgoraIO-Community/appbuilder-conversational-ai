@@ -9,7 +9,7 @@ export const AI_AGENT_STATE = {
     'AGENT_REQUEST_FAILED': 'Start Call',
     'AGENT_DISCONNECT_REQUEST': isMobileUA() ? "End Call": 'Disconnecting agent...', // loading - req
     'AGENT_DISCONNECT_FAILED': 'End Call',
-    'AWAITING_LEAVE': isMobileUA() ? "End Call": "Bye Bye, Agent" // loading
+    'AWAITING_LEAVE': "Start Call" // loading
 } as const;
 
 export type AIAgentState = keyof typeof AI_AGENT_STATE
