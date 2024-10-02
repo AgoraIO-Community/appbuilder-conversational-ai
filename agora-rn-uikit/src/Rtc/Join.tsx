@@ -15,6 +15,7 @@ const Join: React.FC<{
   preventJoin?: boolean;
 }> = ({children, precall, engineRef, uidState, dispatch, tracksReady}) => {
   let joinState = useRef(false);
+  console.log(`OPENAI-LOG: Join state - , ${joinState}, trackready - ${tracksReady}`)
   const {rtcProps} = useContext(PropsContext);
 
   const audioRoom = rtcProps?.audioRoom || false;
@@ -24,8 +25,10 @@ const Join: React.FC<{
   //   : null;
 
   useEffect(() => {
+    console.log(`OPENAI-LOG: useeffect Join state - , ${joinState}, trackready - ${tracksReady}`)
     if (joinState.current && tracksReady && Platform.OS === 'web') {
       //@ts-ignore
+      console.log(`OPENAI-LOG: useeffect publishing, Join state - , ${joinState}, trackready - ${tracksReady}`)
       engineRef.current.publish();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

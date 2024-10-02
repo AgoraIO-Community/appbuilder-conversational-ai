@@ -317,6 +317,7 @@ const Create = ({
             );
           } else {
             enableVideoAndAudioWithInitialStates().then(() => {
+              console.log("OPENAI-LOG: Track got created")
               setTracksReady(true);
               isVideoEnabledRef.current = true;
             });
