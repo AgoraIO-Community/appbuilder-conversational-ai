@@ -194,10 +194,10 @@ const Create = ({
       mode === ChannelProfileType.ChannelProfileLiveBroadcasting &&
       rtcProps?.role === ClientRoleType.ClientRoleAudience
     ) {
-      enableVideoAndAudioWithDisabledState();
+      await enableVideoAndAudioWithDisabledState();
     } else {
       console.log("starting with enabled state true for audio")
-      enableVideoAndAudioWithEnabledState();
+      await enableVideoAndAudioWithEnabledState();
     }
   };
 
