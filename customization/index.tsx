@@ -48,10 +48,6 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 	}, [RtcEngineUnsafe])
 
 	useEffect(() => {
-
-	}, [isAudioEnabled])
-
-	useEffect(() => {
 		if(getRemoteAudioStream(AI_AGENT_UID)){
 			setRemoteTrack(getRemoteAudioStream(AI_AGENT_UID))
 		}
