@@ -115,6 +115,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
           if(agentConnectionState === AgentState.AGENT_CONNECTED || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED){
             if(isMobileUA()){
               await endcall()
+              setAgentConnectionState(AgentState.NOT_CONNECTED);
               return // check later
             }
             try{
