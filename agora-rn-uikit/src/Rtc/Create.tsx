@@ -196,6 +196,7 @@ const Create = ({
     ) {
       enableVideoAndAudioWithDisabledState();
     } else {
+      console.log("starting with enabled state true for audio")
       enableVideoAndAudioWithEnabledState();
     }
   };
