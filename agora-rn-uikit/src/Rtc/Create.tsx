@@ -196,7 +196,6 @@ const Create = ({
     ) {
       await enableVideoAndAudioWithDisabledState();
     } else {
-      console.log("starting with enabled state true for audio")
       await enableVideoAndAudioWithEnabledState();
     }
   };
@@ -317,7 +316,7 @@ const Create = ({
             );
           } else {
             enableVideoAndAudioWithInitialStates().then(() => {
-              console.log("OPENAI-LOG: Track got created")
+              console.log("Audio-Track: Track got created")
               setTracksReady(true);
               isVideoEnabledRef.current = true;
             });
