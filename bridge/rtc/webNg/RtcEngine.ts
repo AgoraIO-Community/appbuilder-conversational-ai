@@ -630,6 +630,7 @@ export default class RtcEngine {
   }
 
   async publish() {
+    console.log(`Audio-Track: ${this.localStream.audio}`)
     if (this.localStream.audio || this.localStream.video) {
       try {
         let tracks: Array<ILocalTrack> = [];
@@ -646,7 +647,9 @@ export default class RtcEngine {
             'API',
             'RTC [publish] trying to publish tracks',
           );
+          console.log(`Audio-Track: RTC publish ${this.localStream.audio}`)
           await this.client.publish(tracks);
+          console.log(`Audio-Track: RTC published ${this.localStream.audio}`)
           logger.log(
             LogSource.AgoraSDK,
             'API',

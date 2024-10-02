@@ -194,9 +194,9 @@ const Create = ({
       mode === ChannelProfileType.ChannelProfileLiveBroadcasting &&
       rtcProps?.role === ClientRoleType.ClientRoleAudience
     ) {
-      enableVideoAndAudioWithDisabledState();
+      await enableVideoAndAudioWithDisabledState();
     } else {
-      enableVideoAndAudioWithEnabledState();
+      await enableVideoAndAudioWithEnabledState();
     }
   };
 
@@ -316,6 +316,7 @@ const Create = ({
             );
           } else {
             enableVideoAndAudioWithInitialStates().then(() => {
+              console.log("Audio-Track: Track got created")
               setTracksReady(true);
               isVideoEnabledRef.current = true;
             });
