@@ -44,7 +44,6 @@ const Bottombar = () => {
     !isMobileUA() && setSidePanel(SidePanelType.Settings)
   }, [])
   return (
-    <AgentProvider>
       <ToolbarPreset
         align="bottom"
         items={{
@@ -80,7 +79,6 @@ const Bottombar = () => {
           'end-call':{ align: 'end', order: 2, hide: true }
         }}
       />
-    </AgentProvider>
   );
 };
 

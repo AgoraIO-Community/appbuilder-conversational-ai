@@ -61,6 +61,9 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
     // const { users } = useContext(UserContext)
     const {  activeUids:users } = useContent();
     const endcall =  useEndCall();
+    // stop_agent API is successful, but agent has not yet left the RTC channel
+    const isAwaitingLeave = agentConnectionState === AgentState.AWAITING_LEAVE
+
 
     // const { toast } = useToast()  
     console.log("Agent Control--", {agentConnectionState}, {bth: AI_AGENT_STATE[agentConnectionState]})
@@ -68,7 +71,10 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
       const handleConnectionToggle = async () => {
         try{
           // connect to agent when agent is in not connected state or when earlier connect failed
-          if (agentConnectionState === AgentState.NOT_CONNECTED || agentConnectionState === AgentState.AGENT_REQUEST_FAILED){
+          if (agentConnectionState === AgentState.NOT_CONNECTED 
+            || agentConnectionState === AgentState.AGENT_REQUEST_FAILED
+            || isAwaitingLeave
+          ){
             try{
               setAgentConnectionState(AgentState.REQUEST_SENT);
               const newClientId = await connectToAIAgent('start_agent', channel_name);
@@ -112,7 +118,9 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             }
           }
           // disconnect agent with agent is already connected or when earlier disconnect failed
-          if(agentConnectionState === AgentState.AGENT_CONNECTED || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED){
+          if(agentConnectionState === AgentState.AGENT_CONNECTED 
+            || agentConnectionState === AgentState.AGENT_DISCONNECT_FAILED
+          ){
             if(isMobileUA()){
               await endcall()
               return // check later
@@ -121,17 +129,17 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_REQUEST);
               await connectToAIAgent('stop_agent', channel_name, clientId || undefined);
               setAgentConnectionState(AgentState.AWAITING_LEAVE);
-            //   toast({ title: "Agent disconnecting..."})
-              // Toast.show({
-              //   leadingIconName: 'tick-fill',
-              //   type: 'success',
-              //   text1: "Agent disconnecting...",
-              //   text2: null,
-              //   visibilityTime: 3000,
-              //   primaryBtn: null,
-              //   secondaryBtn: null,
-              //   leadingIcon: null,
-              // })
+              // toast({ title: "Agent disconnecting..."})
+              Toast.show({
+                leadingIconName: 'tick-fill',
+                type: 'success',
+                text1: "Agent disconnected",
+                text2: null,
+                visibilityTime: 3000,
+                primaryBtn: null,
+                secondaryBtn: null,
+                leadingIcon: null,
+              })
 
             }catch(agentDisconnectError){
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_FAILED);
@@ -182,21 +190,20 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
         // when agent leaves, show left toast, and set agent to not connected state
         if(!aiAgentUID.length && agentConnectionState === AgentState.AWAITING_LEAVE){
             // toast({ title: "Agent left the call"})
-            Toast.show({
-              leadingIconName: 'tick-fill',
-              type: 'success',
-              text1: "Agent left the call",
-              text2: null,
-              visibilityTime: 3000,
-              primaryBtn: null,
-              secondaryBtn: null,
-              leadingIcon: null,
-            })
+            // Toast.show({
+            //   leadingIconName: 'tick-fill',
+            //   type: 'success',
+            //   text1: "Agent left the call",
+            //   text2: null,
+            //   visibilityTime: 3000,
+            //   primaryBtn: null,
+            //   secondaryBtn: null,
+            //   leadingIcon: null,
+            // })
             setAgentConnectionState(AgentState.NOT_CONNECTED);
         }
       },[users])
     
-    const isAwaitingLeave = agentConnectionState === AgentState.AWAITING_LEAVE
     const isLoading = (agentConnectionState === AgentState.REQUEST_SENT 
         || agentConnectionState === AgentState.AGENT_DISCONNECT_REQUEST 
         // || agentConnectionState === AgentState.AWAITING_LEAVE 
@@ -208,7 +215,6 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
     const backgroundColorStyle = isMobileUA() ? {backgroundColor: isEndAgent ? '#FF414D' : '#00C2FF', height: 72} : {}
     const fontcolorStyle = isMobileUA() ? {color: '#FFF'} : {color: isEndAgent ? '#FF414D' : '#00C2FF'}
     return(
-        <div>
         <TouchableOpacity
             style={{
                 display: 'flex',
@@ -225,7 +231,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             }}        
             onPress={handleConnectionToggle}
 
-            disabled={isLoading || isAwaitingLeave}
+            disabled={isLoading}
         >
           {isLoading ? 
           <ActivityIndicator size="small" color={isMobileUA() ? "#FFFFFF" : "#00C2FF"} /> 
@@ -238,6 +244,5 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
               ...style,
             }}>{`${AI_AGENT_STATE[agentConnectionState]}` }</Text>
         </TouchableOpacity>
-        </div>
     )
 }

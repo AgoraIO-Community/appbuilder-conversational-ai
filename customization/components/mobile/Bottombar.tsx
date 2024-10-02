@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ToolbarComponents, useRoomInfo} from 'customization-api';
-import {AgentProvider} from '../AgentControls/AgentContext';
 import {AgentControl} from '../AgentControls';
 const Bottombar = () => {
   const [clientId, setClientId] = useState<string | null>(null);
@@ -13,7 +12,7 @@ const Bottombar = () => {
     }
   `;
   return (
-    <AgentProvider>
+    <>
       <style type="text/css">{css}</style>
       <View style={style.containerStyle}>
         <LocalAudioToolbarItem iconBGColor={"#00C2FF"} iconSize={32} containerStyle={{padding:20}} />
@@ -24,7 +23,7 @@ const Bottombar = () => {
           setClientId={setClientId} 
         />
       </View>
-    </AgentProvider>
+    </>
   );
 };
 
