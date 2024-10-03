@@ -1,4 +1,4 @@
-import React, { useContext, useEffect,useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { AI_AGENT_STATE, AIAgentState, AgentState, AI_AGENT_UID, AGENT_PROXY_URL} from "./const"
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { AgentContext } from './AgentContext';
@@ -15,7 +15,7 @@ const connectToAIAgent = async (
     // const apiUrl = '/api/proxy'; 
     const apiUrl = AGENT_PROXY_URL; 
     const requestBody = {
-      // action: agentAction, 
+      action: agentAction, 
       channel_name: channel_name,
       uid: AI_AGENT_UID
     };
@@ -29,7 +29,7 @@ const connectToAIAgent = async (
     }
 
     try {
-      const response = await fetch(`${apiUrl}/${agentAction}`, {
+      const response = await fetch(`${apiUrl}`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(requestBody),
@@ -54,16 +54,59 @@ const connectToAIAgent = async (
       throw error;
     }
 };
+const pingAIAgent = async (channel_name: string, clientId: string): Promise<void> => {
+  console.log("start ping apicall- begin")
+  const apiUrl = AGENT_PROXY_URL;
+  // const headers: HeadersInit = {
+  //   'X-Client-ID': clientId,
+  // };
+  console.log("start ping apicall")
+  try {
+    const response = await fetch(`https://nodejs-serverless-function-express-alpha-smoky.vercel.app/api/ping?channel_name=${encodeURIComponent(channel_name)}&action=ping-agent`, {
+      method: 'GET',
+      // headers: headers,
+    });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('AI agent ping response:', data);
+  } catch (error) {
+    console.error('Failed to ping AI agent:', error);
+    throw error;
+  }
+};
 export const AgentControl: React.FC<{channel_name: string, style: object, clientId: string, setClientId: () => void}> = ({channel_name,style,clientId,setClientId}) => {
     const {agentConnectionState, setAgentConnectionState} = useContext(AgentContext);
     // console.log("X-Client-ID state", clientId)
     // const { users } = useContext(UserContext)
     const {  activeUids:users } = useContent();
     const endcall =  useEndCall();
+    const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
     // stop_agent API is successful, but agent has not yet left the RTC channel
     const isAwaitingLeave = agentConnectionState === AgentState.AWAITING_LEAVE
 
+    const startPingInterval = () => {
+      console.log("start ping interval")
+      if (pingIntervalRef.current) {
+        console.log("clear ping interval")
+        clearInterval(pingIntervalRef.current);
+      }
+      pingIntervalRef.current = setInterval(() => {
+        console.log("start ping setinterval")
+        pingAIAgent(channel_name, clientId)
+          .catch(error => console.error('Failed to ping agent:', error));
+      }, 1000); // 3 minutes
+    };
+  
+    const stopPingInterval = () => {
+      if (pingIntervalRef.current) {
+        clearInterval(pingIntervalRef.current);
+        pingIntervalRef.current = null;
+      }
+    };
 
     // const { toast } = useToast()  
     console.log("Agent Control--", {agentConnectionState}, {bth: AI_AGENT_STATE[agentConnectionState]})
@@ -79,6 +122,8 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
               setAgentConnectionState(AgentState.REQUEST_SENT);
               const newClientId = await connectToAIAgent('start_agent', channel_name);
               // console.log("response X-Client-ID", newClientId, typeof newClientId)
+              console.log("start complet, pinging", typeof newClientId, newClientId)
+              startPingInterval(); // Start pinging after successful connection
               if(typeof newClientId === 'string'){
                 setClientId(newClientId);
               }
@@ -124,12 +169,14 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             if(isMobileUA()){
               await endcall()
               setAgentConnectionState(AgentState.NOT_CONNECTED);
+              stopPingInterval(); // Stop pinging when disconnecting
               return // check later
             }
             try{
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_REQUEST);
               await connectToAIAgent('stop_agent', channel_name, clientId || undefined);
               setAgentConnectionState(AgentState.AWAITING_LEAVE);
+              stopPingInterval(); // Stop pinging when disconnecting
               // toast({ title: "Agent disconnecting..."})
               Toast.show({
                 leadingIconName: 'tick-fill',
@@ -203,6 +250,9 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             // })
             setAgentConnectionState(AgentState.NOT_CONNECTED);
         }
+        return () => {
+          stopPingInterval();
+        };
       },[users])
     
     const isLoading = (agentConnectionState === AgentState.REQUEST_SENT 
