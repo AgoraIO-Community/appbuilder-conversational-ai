@@ -1,52 +1,27 @@
-/*
-********************************************
- Copyright © 2021 Agora Lab, Inc., all rights reserved.
- AppBuilder and all associated components, source code, APIs, services, and documentation 
- (the “Materials”) are owned by Agora Lab, Inc. and its licensors. The Materials may not be 
- accessed, used, modified, or distributed for any purpose without a license from Agora Lab, Inc.  
- Use without a license or in violation of any license terms and conditions (including use for 
- any purpose competitive to Agora Lab, Inc.’s business) is strictly prohibited. For more 
- information visit https://appbuilder.agora.io. 
-*********************************************
-*/
 import React, {useEffect, useState, useContext} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Redirect} from '../../src/components/Router';
-import PrimaryButton from '../../src/atoms/PrimaryButton';
 import Toast from '../../react-native-toast-message';
 import {ErrorContext} from '../../src/components/common';
 import {
   isWebInternal,
-  maxInputLimit,
   isMobileUA,
   trimText,
 } from '../../src/utils/common';
 import {useString} from '../../src/utils/useString';
 import useCreateRoom from '../../src/utils/useCreateRoom';
-import {CreateProvider} from '../../src/pages/create/useCreate';
 import {
   RoomInfoDefaultValue,
   useRoomInfo,
 } from '../../src/components/room-info/useRoomInfo';
-import Input from '../../src/atoms/Input';
-import Card from '../../src/atoms/Card';
 import Spacer from '../../src/atoms/Spacer';
 import ThemeConfig from '../../src/theme';
 import hexadecimalTransparency from '../../src/utils/hexadecimalTransparency';
 import {useSetRoomInfo} from '../../src/components/room-info/useSetRoomInfo';
-import IDPLogoutComponent from '../../src/auth/IDPLogoutComponent';
 import isSDK from '../../src/utils/isSDK';
-import {
-  createRoomErrorToastHeading,
-  createRoomErrorToastSubHeading,
-  createRoomSuccessToastHeading,
-  createRoomSuccessToastSubHeading,
-} from '../../src/language/default-labels/createScreenLabels';
 import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
-import {LogoComponent} from './Bottombar';
-import { useUserName } from 'customization-api';
-import { AgoraLogo, AgoraOpenAILogo, OpenAILogo } from './icons';
+import { AgoraLogo, AgoraOpenAILogo, OpenAILogo, CallIcon } from './icons';
 
 const CustomCreate = () => {
   const {
@@ -57,25 +32,11 @@ const CustomCreate = () => {
   const {setGlobalErrorMessage} = useContext(ErrorContext);
   const [loading, setLoading] = useState(false);
   const [roomTitle, onChangeRoomTitle] = useState('');
-  // const [randomRoomTitle, setRandomRoomTitle] = useState('');
-  const [pstnToggle, setPstnToggle] = useState(false);
-  const [coHostToggle, setCoHostToggle] = useState(false);
   const [roomCreated, setRoomCreated] = useState(false);
   const createRoomFun = useCreateRoom();
   const {setRoomInfo} = useSetRoomInfo();
   const {setStore} = useContext(StorageContext);
-  const [displayName, setDisplayName] = useState('');
-  const [userName, setUserName] = useUserName();
   const loadingText = useString('loadingText')();
-
-  const createRoomErrorToastHeadingText = useString(
-    createRoomErrorToastHeading,
-  )();
-  const createRoomErrorToastSubHeadingText = useString(
-    createRoomErrorToastSubHeading,
-  )();
-
-  const isDesktop = !isMobileUA();
 
   useEffect(() => {
     logger.log(
@@ -103,9 +64,6 @@ const CustomCreate = () => {
       }
       return result;
     };
-    // default username
-    setUserName("You")
-    setDisplayName("You")
     setStore(prevState => {
       return {
         ...prevState,
@@ -116,9 +74,6 @@ const CustomCreate = () => {
     onChangeRoomTitle(generateChannelId)
 
   }, [])
-  const showShareScreen = () => {
-    setRoomCreated(true);
-  };
 
   const createRoomAndNavigateToShare = async (
     roomTitle: string,
@@ -149,7 +104,7 @@ const CustomCreate = () => {
           secondaryBtn: null,
           leadingIcon: null,
         });
-        showShareScreen();
+        setRoomCreated(true);
       } catch (error) {
         setLoading(false);
         logger.error(
@@ -158,17 +113,10 @@ const CustomCreate = () => {
           'There was error while creating meeting',
           error,
         );
-        if (
-          createRoomErrorToastHeadingText ||
-          createRoomErrorToastSubHeadingText
-        ) {
-          setGlobalErrorMessage({
-            name: createRoomErrorToastHeadingText,
-            message: createRoomErrorToastSubHeadingText,
-          });
-        } else {
-          setGlobalErrorMessage(error);
-        }
+        setGlobalErrorMessage({
+          name: "Unable to join channel",
+          message: error.message,
+        });
       }
     }
   };
@@ -185,147 +133,32 @@ const CustomCreate = () => {
     });
   };
 
-  // const onChangeDisplayName = (name: string) => {
-  //   setDisplayName(name);
-  //   setStore(prevState => {
-  //     return {
-  //       ...prevState,
-  //       displayName: name,
-  //     };
-  //   });
-  // };
-
   return (
-    <CreateProvider
-      value={{
-        showShareScreen,
-      }}>
+    <>
       {!roomCreated ? (
         <View style={style.root}>
-          {!isMobileUA() ? (
-            <IDPLogoutComponent containerStyle={{marginBottom: -100}} />
-          ) : (
-            <></>
-          )}
-          <View style={isMobileUA() ? style.mainMobile : style.main}>
-            <Card cardContainerStyle={isMobileUA() ? style.mobileContainerStyle : {}}>
-              <View>
-                {isMobileUA() ? (
-                  <View style={style.topLogoContainer}>
-                    <View style={{paddingTop: 14}}>
-                      <AgoraLogo />
-                    </View>
-                    <View>
-                      <OpenAILogo />
-                    </View>
-                  </View>
-                ) : (
-                  <View style={style.logoContainerStyle}>
-                    <LogoComponent />
-                  </View>
-                )}
-
-                {isMobileUA() ? (
-                  <View>
-                    <View style={style.centerLogoContainer}>
-                      <AgoraOpenAILogo />
-                      <Text style={style.mainTextStyle}>Agora & OpenAI</Text>
-                      <Text style={style.subTextStyle}>
-                        Agora Conversational AI demo built in partnership with
-                        OpenAI
-                      </Text>
-                    </View>
-                    <Spacer size={40} />
-                    <Input
-                  maxLength={maxInputLimit}
-                  labelStyle={style.inputLabelStyle}
-                  label={'Channel Name'}
-                  value={roomTitle}
-                  placeholder={'Channal Name'}
-                  onChangeText={text => onChangeRoomTitle(text)}
-                  onSubmitEditing={() => {
-                    if (!roomTitle?.trim() || !displayName?.trim()) {
-                      return;
-                    } else {
-                      if (!$config.BACKEND_ENDPOINT) {
-                        showError();
-                      } else {
-                        // !roomTitle?.trim() &&
-                        //   onChangeRoomTitle(randomRoomTitle);
-                        createRoomAndNavigateToShare(
-                          roomTitle?.trim(),
-                          pstnToggle,
-                          !coHostToggle,
-                        );
-                      }
-                    }
-                  }}
-                />
-                  </View>
-                ) : (
-                  <></>
-                )}
-                <Spacer size={isDesktop ? 20 : 16} />
-                {/* <Text style={style.heading}>Agora Conversational AI</Text> */}
-  
-                {/* <Input
-                  maxLength={maxInputLimit}
-                  labelStyle={style.inputLabelStyle}
-                  label={'Your Name'}
-                  value={displayName}
-                  placeholder={'Your Name'}
-                  onChangeText={text => onChangeDisplayName(text)}
-                  onSubmitEditing={() => {
-                    if (!roomTitle?.trim() || !displayName?.trim()) {
-                      return;
-                    } else {
-                      if (!$config.BACKEND_ENDPOINT) {
-                        showError();
-                      } else {
-                        // !roomTitle?.trim() &&
-                        //   onChangeRoomTitle(randomRoomTitle);
-                        createRoomAndNavigateToShare(
-                          roomTitle?.trim(),
-                          pstnToggle,
-                          !coHostToggle,
-                        );
-                      }
-                    }
-                  }}
-                />
-                <Spacer size={40} /> */}
-                {!isMobileUA() &&<Input
-                  maxLength={maxInputLimit}
-                  labelStyle={style.inputLabelStyle}
-                  label={'Channel Name'}
-                  value={roomTitle}
-                  placeholder={'Channal Name'}
-                  onChangeText={text => onChangeRoomTitle(text)}
-                  onSubmitEditing={() => {
-                    if (!roomTitle?.trim() || !displayName?.trim()) {
-                      return;
-                    } else {
-                      if (!$config.BACKEND_ENDPOINT) {
-                        showError();
-                      } else {
-                        // !roomTitle?.trim() &&
-                        //   onChangeRoomTitle(randomRoomTitle);
-                        createRoomAndNavigateToShare(
-                          roomTitle?.trim(),
-                          pstnToggle,
-                          !coHostToggle,
-                        );
-                      }
-                    }
-                  }}
-                />}
-                <Spacer size={40} />
+            <View style={style.topLogoContainer}>
+              <View style={{paddingTop: 14}}>
+                <AgoraLogo />
               </View>
-              <View style={[style.btnContainer]}>
-                <PrimaryButton
-                  iconName={'video-plus'}
+              <View>
+                <OpenAILogo />
+              </View>
+            </View>
+            <View style={{ width:456, marginTop:90, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+              <View style={style.centerLogoContainer}>
+                  <View style={{padding: 20}}>
+                    <AgoraOpenAILogo />
+                  </View>
+                  <Text style={style.mainTextStyle}>Agora & OpenAI</Text>
+                  <Spacer size={20} />
+                  <Text style={style.subTextStyle}>Agora Conversational AI demo</Text>
+                  <Text style={style.subTextStyle}>built in partnership with OpenAI</Text>
+              </View>
+              <Spacer size={20} />
+              <TouchableOpacity
                   disabled={loading || !roomTitle?.trim()}
-                  containerStyle={!isDesktop && {width: '100%'}}
+                  style={style.btnContainer}
                   onPress={() => {
                     if (!$config.BACKEND_ENDPOINT) {
                       showError();
@@ -334,47 +167,45 @@ const CustomCreate = () => {
                       //   onChangeRoomTitle(randomRoomTitle);
                       createRoomAndNavigateToShare(
                         roomTitle?.trim(),
-                        pstnToggle,
-                        !coHostToggle,
+                        false,
+                        false
                       );
                     }
                   }}
-                  text={loading ? loadingText : 'JOIN CHANNEL'}
-                />
-              </View>
-            </Card>
-          </View>
+                > 
+                  <CallIcon fill='#111111'/>
+                  <Text style={{
+                    textAlign:'center',
+                    fontSize: 18,
+                    fontStyle: 'normal',
+                    fontWeight: '600',
+                    lineHeight: 18,
+                  }}>{loading ? loadingText : 'Join Call'}</Text>
+              </TouchableOpacity>
+            </View>
         </View>
       ) : (
-        <></>
+        <Redirect to={host} />
       )}
-      {roomCreated ? <Redirect to={host} /> : <></>}
-    </CreateProvider>
+    </>
   );
 };
 
 const style = StyleSheet.create({
-  logoContainerStyle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   root: {
+    display: 'flex',
     flex: 1,
-  },
-  inputLabelStyle: {
-    paddingLeft: 8,
-  },
-  main: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection:'column',
+    padding:20,
+    alignItems: 'center',
+    gap: 20,
+    backgroundColor: '#111',
+    borderRadius: 20,
   },
   mainMobile:{
     paddingBottom:80,
     paddingTop:66,
     flex:1
-
   },
   mobileContainerStyle:{
    backgroundColor:'transparent',
@@ -383,86 +214,42 @@ const style = StyleSheet.create({
    paddingTop:0
 
   },
-  heading: {
-    fontSize: ThemeConfig.FontSize.medium,
-    fontWeight: '700',
-    lineHeight: ThemeConfig.FontSize.medium,
-    color: $config.FONT_COLOR,
-    fontFamily: ThemeConfig.FontFamily.sansPro,
-    opacity: ThemeConfig.EmphasisOpacity.high,
-  },
-  headline: {
-    fontSize: 10,
-    fontWeight: '400',
-    textAlign: 'center',
-    color: $config.FONT_COLOR,
-    marginBottom: 40,
-  },
   btnContainer: {
     width: '100%',
     alignItems: 'center',
-  },
-  toggleContainer: {
-    flexDirection: 'row',
-    backgroundColor: $config.CARD_LAYER_2_COLOR,
-    paddingVertical: 22,
-    paddingHorizontal: 20,
-  },
-  upper: {
-    borderTopLeftRadius: ThemeConfig.BorderRadius.medium,
-    borderTopRightRadius: ThemeConfig.BorderRadius.medium,
-  },
-  lower: {
-    borderBottomLeftRadius: ThemeConfig.BorderRadius.medium,
-    borderBottomRightRadius: ThemeConfig.BorderRadius.medium,
-  },
-  toggleLabel: {
-    color: $config.FONT_COLOR,
-    fontSize: ThemeConfig.FontSize.normal,
-    marginRight: 4,
-    fontFamily: ThemeConfig.FontFamily.sansPro,
-    fontWeight: '400',
-    alignSelf: 'center',
+    display: 'flex',
+    flexDirection:'row',
+    height:56,
+    padding:20,
+    justifyContent: "center",
+    alignContent: "center",
+    gap: 8,
+    borderRadius: 4,
+    backgroundColor: '#00C2FF'
   },
   separator: {
     height: 1,
   },
-  infoContainer: {
-    flexDirection: 'row',
-    flex: 0.8,
-  },
-  infoToggleContainer: {
-    flex: 0.2,
-    alignItems: 'flex-end',
-    alignSelf: 'center',
-  },
-  tooltipActiveBgStyle: {
-    backgroundColor:
-      $config.CARD_LAYER_5_COLOR + hexadecimalTransparency['20%'],
-    borderRadius: 14,
-    padding: 5,
-  },
-  tooltipDefaultBgStyle: {
-    padding: 5,
-  },
   topLogoContainer: {
-    flex: 1,
+    paddingVertical:20,
+    paddingHorizontal:32,
+    display:'flex',
+    width:"auto",
     flexDirection: 'row',
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
+    gap: 20,
     flexShrink: 0,
+    alignSelf: 'stretch'
   },
   centerLogoContainer: {
-
-    paddingBottom: 10,
+    padding:40,
     display: 'flex',
     paddingHorizontal: 8,
     flexFirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
     alignSelf: 'stretch',
   },
   mainTextStyle: {
@@ -485,5 +272,6 @@ const style = StyleSheet.create({
     lineHeight: 21.6,
   },
 });
+
 
 export default CustomCreate;
