@@ -6,6 +6,7 @@ import Toast from "../../../react-native-toast-message/index";
 
 import { isMobileUA, ThemeConfig, useContent, useEndCall } from "customization-api";
 import { CallIcon, EndCall } from '../icons';
+import { useHistory} from '../../../src/components/Router';
 
 const connectToAIAgent = async (
   agentAction: 'start_agent' | 'stop_agent', 
@@ -22,7 +23,7 @@ const connectToAIAgent = async (
     console.log({requestBody})
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${agentAuthToken}`
+      'Authorization': `Bearer ${agentAuthToken}`,
     };
 
     if (agentAction === 'stop_agent' && clientId) {
@@ -34,6 +35,8 @@ const connectToAIAgent = async (
         method: 'POST',
         headers: headers,
         body: JSON.stringify(requestBody),
+        mode: 'cors', 
+        credentials: 'include' 
       });
   
       if (!response.ok) {
@@ -62,6 +65,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
     // const { users } = useContext(UserContext)
     const {  activeUids:users } = useContent();
     const endcall =  useEndCall();
+    const history = useHistory()
     
     // stop_agent API is successful, but agent has not yet left the RTC channel
     const isAwaitingLeave = agentConnectionState === AgentState.AWAITING_LEAVE
@@ -105,6 +109,22 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             //     variant: "destructive",
             //     action: <ToastAction altText="Try again">Try again</ToastAction>,
             //   })
+        
+            if (agentConnectError.toString().indexOf('401') !== -1 ) {
+              Toast.show({
+                leadingIconName: 'alert',
+                type: 'error',
+                text1: "You are not authorized",
+                text2: null,
+                visibilityTime: 5000,
+                primaryBtn: null,
+                secondaryBtn: null,
+                leadingIcon: null,
+              })
+              window.location.href = window.location.pathname
+
+
+            } else {
               Toast.show({
                 leadingIconName: 'alert',
                 type: 'error',
@@ -115,6 +135,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
                 secondaryBtn: null,
                 leadingIcon: null,
               })
+            }
 
               throw agentConnectError
             }

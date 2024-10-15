@@ -22,6 +22,7 @@ import isSDK from '../../src/utils/isSDK';
 import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
 import { AgoraLogo, AgoraOpenAILogo, OpenAILogo, CallIcon } from './icons';
+import { AgentContext } from './AgentControls/AgentContext';
 
 const CustomCreate = () => {
   const {
@@ -38,6 +39,8 @@ const CustomCreate = () => {
   const {setStore} = useContext(StorageContext);
   const loadingText = useString('loadingText')();
   const history = useHistory();
+
+  const {agentAuthToken} = useContext(AgentContext)
 
 
   useEffect(() => {
@@ -150,7 +153,7 @@ const CustomCreate = () => {
 
   return (
     <>
-      {!roomCreated ? (
+      {(!roomCreated  && !agentAuthToken) && (
         <View style={style.root}>
             <View style={style.topLogoContainer}>
               <View style={{paddingTop: 14}}>
@@ -203,7 +206,9 @@ const CustomCreate = () => {
               </TouchableOpacity>
             </View>
         </View>
-      ) : (
+      ) 
+    }
+      {(roomCreated  && agentAuthToken) && (
         <Redirect to={host} />
       )}
     </>
