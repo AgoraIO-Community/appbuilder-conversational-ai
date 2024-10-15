@@ -202,7 +202,7 @@ const CustomCreate = () => {
                     fontStyle: 'normal',
                     fontWeight: '600',
                     lineHeight: 18,
-                  }}>{loading ? loadingText : 'Join Call'}</Text>
+                  }}>{loading ? loadingText : 'Sign in to Join Call'}</Text>
               </TouchableOpacity>
             </View>
         </View>
