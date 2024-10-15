@@ -27,6 +27,8 @@ import MobileBottombar from './components/mobile/Bottombar'
 import {AgentProvider} from './components/AgentControls/AgentContext';
 import { AgentContext } from './components/AgentControls/AgentContext';
 import { AgentState } from './components/AgentControls/const'
+import CustomLoginRoute from "./routes/CustomLoginRoute";
+import CustomValidateRoute from "./routes/CustomValidateRoute";
 
 const Topbar = () => {
 	return null;
@@ -134,6 +136,26 @@ const customization = customize({
 			bottomToolBar: isMobileUA() ? MobileBottombar : Bottombar,
 		},
 	},
+  // customRoutes: [
+  //   {
+  //     path: '/login',
+  //     exact: true,
+  //     isPrivateRoute: false,
+  //     component: CustomLoginRoute,
+  //     componentProps: {
+  //       customData: '',
+  //     },
+  //   },
+  //   {
+  //     path: 'validate',
+  //     exact: true,
+  //     isPrivateRoute: true,
+  //     component: CustomValidateRoute,
+  //     componentProps: {
+  //       customData: '',
+  //     },
+  //   },
+  // ],
 });
 
 export { AI_AGENT_UID };

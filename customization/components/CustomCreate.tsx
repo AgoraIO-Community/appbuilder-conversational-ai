@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {Redirect} from '../../src/components/Router';
+import {Redirect, useHistory} from '../../src/components/Router';
 import Toast from '../../react-native-toast-message';
 import {ErrorContext} from '../../src/components/common';
 import {
@@ -37,6 +37,7 @@ const CustomCreate = () => {
   const {setRoomInfo} = useSetRoomInfo();
   const {setStore} = useContext(StorageContext);
   const loadingText = useString('loadingText')();
+  const history = useHistory();
 
   useEffect(() => {
     logger.log(
@@ -74,6 +75,17 @@ const CustomCreate = () => {
     onChangeRoomTitle(generateChannelId)
 
   }, [])
+
+
+  useEffect( () => {
+  // to check if user logged in quer param 
+  return;
+    createRoomAndNavigateToShare(
+      roomTitle?.trim(),
+      false,
+      false
+    );
+  },[])
 
   const createRoomAndNavigateToShare = async (
     roomTitle: string,
@@ -165,11 +177,13 @@ const CustomCreate = () => {
                     } else {
                       // !roomTitle?.trim() &&
                       //   onChangeRoomTitle(randomRoomTitle);
-                      createRoomAndNavigateToShare(
-                        roomTitle?.trim(),
-                        false,
-                        false
-                      );
+                      history.push("login");
+                     
+                      // createRoomAndNavigateToShare(
+                      //   roomTitle?.trim(),
+                      //   false,
+                      //   false
+                      // );
                     }
                   }}
                 > 
