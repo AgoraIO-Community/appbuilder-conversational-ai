@@ -23,6 +23,8 @@ import StorageContext from '../../src/components/StorageContext';
 import { useUserName } from 'customization-api';
 import { AgoraLogo, AgoraOpenAILogo, OpenAILogo, CallIcon } from './icons';
 import { useHistory} from '../../src/components/Router';
+import { AgentContext } from './AgentControls/AgentContext';
+
 
 const CustomCreateNative = () => {
   const {
@@ -39,6 +41,7 @@ const CustomCreateNative = () => {
   const {setStore} = useContext(StorageContext);
   const loadingText = useString('loadingText')();
   const history = useHistory();
+  const {agentAuthToken} = useContext(AgentContext)
 
 
   useEffect(() => {
@@ -151,7 +154,7 @@ const CustomCreateNative = () => {
 
   return (
     <>
-      {!roomCreated ? (
+      {(!roomCreated  && !agentAuthToken) &&  (
         <View style={style.root}>
           <View style={style.mainMobile }>
             <Card cardContainerStyle={style.mobileContainerStyle}>
@@ -204,10 +207,12 @@ const CustomCreateNative = () => {
             </Card>
           </View>
         </View>
-      ) : (
-        <Redirect to={host} /> 
-      )}
-      </>
+      )
+     }
+    {(roomCreated  && agentAuthToken) && (
+        <Redirect to={host} />
+    )}
+    </>
   );
 };
 

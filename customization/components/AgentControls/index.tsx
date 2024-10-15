@@ -60,7 +60,7 @@ const connectToAIAgent = async (
 };
 
 export const AgentControl: React.FC<{channel_name: string, style: object, clientId: string, setClientId: () => void}> = ({channel_name,style,clientId,setClientId}) => {
-    const {agentConnectionState, setAgentConnectionState,agentAuthToken} = useContext(AgentContext);
+    const {agentConnectionState, setAgentConnectionState,agentAuthToken, setAgentAuthToken} = useContext(AgentContext);
     // console.log("X-Client-ID state", clientId)
     // const { users } = useContext(UserContext)
     const {  activeUids:users } = useContent();
@@ -147,6 +147,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             if(isMobileUA()){
               await endcall()
               setAgentConnectionState(AgentState.NOT_CONNECTED);
+              setAgentAuthToken(null)
               return // check later
             }
             try{

@@ -38,6 +38,11 @@ export const AI_AGENT_UID = 123;
 // export const AGENT_PROXY_URL = "http://localhost:3000/api/proxy"
 // export const AGENT_PROXY_URL = "https://conversational-ai-agent-git-testing-cors-agoraio.vercel.app/api/proxy"
 // export const AGENT_PROXY_URL = "https://nodejs-serverless-function-express-alpha-smoky.vercel.app/api/hello"
-//export const AGENT_PROXY_URL = "https://agora-realtime-proxy-590d34bfeb04.herokuapp.com"
-export const AGENT_PROXY_URL = "https://agora-realtime-proxy-dev-0af5192e12dd.herokuapp.com"
+export const AGENT_PROXY_URL = "https://agora-realtime-proxy-590d34bfeb04.herokuapp.com"
+// export const AGENT_PROXY_URL = "https://agora-realtime-proxy-dev-0af5192e12dd.herokuapp.com"
 // export const AGENT_PROXY_URL = "https://conversational-ai-agent-git-setmute-agoraio.vercel.app/api/proxy"
+
+export const AGORA_SSO_LOGIN = 'https://sso2.agora.io/api/v0/oauth/authorize';
+// export const AGORA_SSO_LOGIN = 'https://staging-sso.agora.io/api/v0/oauth/authorize';
+
+export const AGORA_SSO_CLIENT_ID = 'openai_agora'; 
