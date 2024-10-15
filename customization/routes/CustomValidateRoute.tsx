@@ -2,6 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, { useContext, useEffect } from 'react';
 import {Redirect, useHistory} from '../../src/components/Router';
 import { AgentContext } from '../../customization/components/AgentControls/AgentContext';
+import Loading from "../../src/subComponents/Loading"
 
 const CustomValidateRoute = () => {
     const history = useHistory();
@@ -20,9 +21,7 @@ const CustomValidateRoute = () => {
         history.push('/create?auth=success');
       }
   }, []);
-  return (
-    <></>
-  );
+  return <Loading text=''/>;
 };
 
 export default CustomValidateRoute;

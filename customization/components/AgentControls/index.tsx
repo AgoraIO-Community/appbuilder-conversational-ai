@@ -114,15 +114,17 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
               Toast.show({
                 leadingIconName: 'alert',
                 type: 'error',
-                text1: "You are not authorized",
+                text1: "Your session is expired. Please sing in to join call.",
                 text2: null,
                 visibilityTime: 5000,
                 primaryBtn: null,
                 secondaryBtn: null,
                 leadingIcon: null,
               })
-              window.location.href = '/create'
-
+              // window.location.href = '/create'
+              await endcall()
+              setAgentAuthToken(null)
+              return
 
             } else {
               Toast.show({

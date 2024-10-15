@@ -24,6 +24,8 @@ import { useUserName } from 'customization-api';
 import { AgoraLogo, AgoraOpenAILogo, OpenAILogo, CallIcon } from './icons';
 import { useHistory} from '../../src/components/Router';
 import { AgentContext } from './AgentControls/AgentContext';
+import {handleSSOLogin} from './utils';
+
 
 
 const CustomCreateNative = () => {
@@ -184,14 +186,8 @@ const CustomCreateNative = () => {
                     if (!$config.BACKEND_ENDPOINT) {
                       showError();
                     }  else {
-                      // !roomTitle?.trim() &&
-                      //   onChangeRoomTitle(randomRoomTitle);
-                      // createRoomAndNavigateToShare(
-                      //   roomTitle?.trim(),
-                      //   false,
-                      //   false
-                      // );
-                      history.push("login");
+                      // handleSSOLogin()
+                      history.push('/login')
                     }
                   }}
                 > 

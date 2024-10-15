@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet,  Text, ActivityIndicator, View} from 'react-native';
 import {AGENT_PROXY_URL, AGORA_SSO_LOGIN, AGORA_SSO_CLIENT_ID} from "../components/AgentControls/const"
+import Loading from "../../src/subComponents/Loading"
 
 export default function CustomLoginRoute() {
 
@@ -20,5 +21,5 @@ export default function CustomLoginRoute() {
     handleSSOLogin();
   }, []);
 
-  return <></>;
+  return <Loading text=''/>;
 }

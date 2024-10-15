@@ -23,6 +23,7 @@ import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
 import { AgoraLogo, AgoraOpenAILogo, OpenAILogo, CallIcon } from './icons';
 import { AgentContext } from './AgentControls/AgentContext';
+import {handleSSOLogin} from './utils';
 
 const CustomCreate = () => {
   const {
@@ -183,15 +184,8 @@ const CustomCreate = () => {
                       showError();
                     } 
                      else {
-                      // !roomTitle?.trim() &&
-                      //   onChangeRoomTitle(randomRoomTitle);
-                      history.push("login");
-                     
-                      // createRoomAndNavigateToShare(
-                      //   roomTitle?.trim(),
-                      //   false,
-                      //   false
-                      // );
+                      // handleSSOLogin()
+                      history.push('/login')
                     }
                   }}
                 > 
