@@ -121,7 +121,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
                 secondaryBtn: null,
                 leadingIcon: null,
               })
-              window.location.href = '/'
+              window.location.href = '/create'
 
 
             } else {
