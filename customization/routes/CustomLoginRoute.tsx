@@ -21,5 +21,5 @@ export default function CustomLoginRoute() {
     handleSSOLogin();
   }, []);
 
-  return <Loading text='Redirecting to agora SSO'/>;
+  return <Loading text='Redirecting to agora SSO...'/>;
 }
