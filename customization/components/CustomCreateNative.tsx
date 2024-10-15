@@ -78,17 +78,17 @@ const CustomCreateNative = () => {
 
   }, [])
 
-  // useEffect( () => {
-  //   // to check if user logged in quer param 
-  //   const queryParams = new URLSearchParams(window.location.search);
-  //     if (queryParams.get('auth') === 'success') {
-  //       createRoomAndNavigateToShare(
-  //         roomTitle?.trim(),
-  //         false,
-  //         false
-  //       );
-  //       }
-  //   },[])
+  useEffect( () => {
+    // to check if user logged in quer param 
+    const queryParams = new URLSearchParams(window.location.search);
+      if (queryParams.get('auth') === 'success' && roomTitle != '') {
+        createRoomAndNavigateToShare(
+          roomTitle?.trim(),
+          false,
+          false
+        );
+        }
+    },[roomTitle])
 
   const createRoomAndNavigateToShare = async (
     roomTitle: string,
@@ -180,13 +180,7 @@ const CustomCreateNative = () => {
                     const queryParams = new URLSearchParams(window.location.search);
                     if (!$config.BACKEND_ENDPOINT) {
                       showError();
-                    } if (queryParams.get('auth') === 'success') {
-                      createRoomAndNavigateToShare(
-                        roomTitle?.trim(),
-                        false,
-                        false
-                      );
-                      } else {
+                    }  else {
                       // !roomTitle?.trim() &&
                       //   onChangeRoomTitle(randomRoomTitle);
                       // createRoomAndNavigateToShare(
