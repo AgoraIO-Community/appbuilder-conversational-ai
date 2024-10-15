@@ -77,15 +77,17 @@ const CustomCreate = () => {
   }, [])
 
 
-  useEffect( () => {
-  // to check if user logged in quer param 
-  return;
-    createRoomAndNavigateToShare(
-      roomTitle?.trim(),
-      false,
-      false
-    );
-  },[])
+  // useEffect( () => {
+  // // to check if user logged in quer param 
+  // const queryParams = new URLSearchParams(window.location.search);
+  //   if (queryParams.get('auth') === 'success') {
+  //     createRoomAndNavigateToShare(
+  //       roomTitle?.trim(),
+  //       false,
+  //       false
+  //     );
+  //     }
+  // },[])
 
   const createRoomAndNavigateToShare = async (
     roomTitle: string,
@@ -172,9 +174,18 @@ const CustomCreate = () => {
                   disabled={loading || !roomTitle?.trim()}
                   style={style.btnContainer}
                   onPress={() => {
+                    const queryParams = new URLSearchParams(window.location.search);
                     if (!$config.BACKEND_ENDPOINT) {
                       showError();
-                    } else {
+                    } 
+                      if (queryParams.get('auth') === 'success') {
+                        createRoomAndNavigateToShare(
+                          roomTitle?.trim(),
+                          false,
+                          false
+                        );
+                        }
+                     else {
                       // !roomTitle?.trim() &&
                       //   onChangeRoomTitle(randomRoomTitle);
                       history.push("login");

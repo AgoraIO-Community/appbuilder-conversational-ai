@@ -22,6 +22,7 @@ import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
 import { useUserName } from 'customization-api';
 import { AgoraLogo, AgoraOpenAILogo, OpenAILogo, CallIcon } from './icons';
+import { useHistory} from '../../src/components/Router';
 
 const CustomCreateNative = () => {
   const {
@@ -37,6 +38,7 @@ const CustomCreateNative = () => {
   const {setRoomInfo} = useSetRoomInfo();
   const {setStore} = useContext(StorageContext);
   const loadingText = useString('loadingText')();
+  const history = useHistory();
 
 
   useEffect(() => {
@@ -75,6 +77,18 @@ const CustomCreateNative = () => {
     onChangeRoomTitle(generateChannelId)
 
   }, [])
+
+  // useEffect( () => {
+  //   // to check if user logged in quer param 
+  //   const queryParams = new URLSearchParams(window.location.search);
+  //     if (queryParams.get('auth') === 'success') {
+  //       createRoomAndNavigateToShare(
+  //         roomTitle?.trim(),
+  //         false,
+  //         false
+  //       );
+  //       }
+  //   },[])
 
   const createRoomAndNavigateToShare = async (
     roomTitle: string,
@@ -163,16 +177,24 @@ const CustomCreateNative = () => {
                   disabled={loading || !roomTitle?.trim()}
                   style={style.btnContainer}
                   onPress={() => {
+                    const queryParams = new URLSearchParams(window.location.search);
                     if (!$config.BACKEND_ENDPOINT) {
                       showError();
-                    } else {
-                      // !roomTitle?.trim() &&
-                      //   onChangeRoomTitle(randomRoomTitle);
+                    } if (queryParams.get('auth') === 'success') {
                       createRoomAndNavigateToShare(
                         roomTitle?.trim(),
                         false,
                         false
                       );
+                      } else {
+                      // !roomTitle?.trim() &&
+                      //   onChangeRoomTitle(randomRoomTitle);
+                      // createRoomAndNavigateToShare(
+                      //   roomTitle?.trim(),
+                      //   false,
+                      //   false
+                      // );
+                      history.push("login");
                     }
                   }}
                 > 

@@ -10,7 +10,7 @@ import { CallIcon, EndCall } from '../icons';
 const connectToAIAgent = async (
   agentAction: 'start_agent' | 'stop_agent', 
   channel_name: string,
-  clientId?:string): Promise<string | void> => {
+  clientId:string,agentAuthToken:string): Promise<string | void> => {
 
     // const apiUrl = '/api/proxy'; 
     const apiUrl = AGENT_PROXY_URL; 
@@ -22,6 +22,7 @@ const connectToAIAgent = async (
     console.log({requestBody})
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${agentAuthToken}`
     };
 
     if (agentAction === 'stop_agent' && clientId) {
@@ -56,11 +57,12 @@ const connectToAIAgent = async (
 };
 
 export const AgentControl: React.FC<{channel_name: string, style: object, clientId: string, setClientId: () => void}> = ({channel_name,style,clientId,setClientId}) => {
-    const {agentConnectionState, setAgentConnectionState} = useContext(AgentContext);
+    const {agentConnectionState, setAgentConnectionState,agentAuthToken} = useContext(AgentContext);
     // console.log("X-Client-ID state", clientId)
     // const { users } = useContext(UserContext)
     const {  activeUids:users } = useContent();
     const endcall =  useEndCall();
+    
     // stop_agent API is successful, but agent has not yet left the RTC channel
     const isAwaitingLeave = agentConnectionState === AgentState.AWAITING_LEAVE
 
@@ -77,7 +79,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
           ){
             try{
               setAgentConnectionState(AgentState.REQUEST_SENT);
-              const newClientId = await connectToAIAgent('start_agent', channel_name);
+              const newClientId = await connectToAIAgent('start_agent', channel_name,'',agentAuthToken);
               // console.log("response X-Client-ID", newClientId, typeof newClientId)
               if(typeof newClientId === 'string'){
                 setClientId(newClientId);
@@ -128,7 +130,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             }
             try{
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_REQUEST);
-              await connectToAIAgent('stop_agent', channel_name, clientId || undefined);
+              await connectToAIAgent('stop_agent', channel_name, clientId || undefined, agentAuthToken);
               setAgentConnectionState(AgentState.AWAITING_LEAVE);
               // toast({ title: "Agent disconnecting..."})
               Toast.show({
