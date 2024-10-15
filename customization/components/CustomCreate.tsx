@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {Redirect} from '../../src/components/Router';
+import {Redirect, useHistory} from '../../src/components/Router';
 import Toast from '../../react-native-toast-message';
 import {ErrorContext} from '../../src/components/common';
 import {
@@ -22,6 +22,8 @@ import isSDK from '../../src/utils/isSDK';
 import {LogSource, logger} from '../../src/logger/AppBuilderLogger';
 import StorageContext from '../../src/components/StorageContext';
 import { AgoraLogo, AgoraOpenAILogo, OpenAILogo, CallIcon } from './icons';
+import { AgentContext } from './AgentControls/AgentContext';
+import {handleSSOLogin} from './utils';
 
 const CustomCreate = () => {
   const {
@@ -37,6 +39,10 @@ const CustomCreate = () => {
   const {setRoomInfo} = useSetRoomInfo();
   const {setStore} = useContext(StorageContext);
   const loadingText = useString('loadingText')();
+  const history = useHistory();
+
+  const {agentAuthToken} = useContext(AgentContext)
+
 
   useEffect(() => {
     logger.log(
@@ -74,6 +80,19 @@ const CustomCreate = () => {
     onChangeRoomTitle(generateChannelId)
 
   }, [])
+
+
+  useEffect( () => {
+  // to check if user logged in quer param 
+  const queryParams = new URLSearchParams(window.location.search);
+    if (queryParams.get('auth') === 'success' && roomTitle != '') {
+      createRoomAndNavigateToShare(
+        roomTitle?.trim(),
+        false,
+        false
+      );
+      }
+  },[roomTitle])
 
   const createRoomAndNavigateToShare = async (
     roomTitle: string,
@@ -135,7 +154,7 @@ const CustomCreate = () => {
 
   return (
     <>
-      {!roomCreated ? (
+      {(!roomCreated  && !agentAuthToken) && (
         <View style={style.root}>
             <View style={style.topLogoContainer}>
               <View style={{paddingTop: 14}}>
@@ -160,16 +179,13 @@ const CustomCreate = () => {
                   disabled={loading || !roomTitle?.trim()}
                   style={style.btnContainer}
                   onPress={() => {
+                    const queryParams = new URLSearchParams(window.location.search);
                     if (!$config.BACKEND_ENDPOINT) {
                       showError();
-                    } else {
-                      // !roomTitle?.trim() &&
-                      //   onChangeRoomTitle(randomRoomTitle);
-                      createRoomAndNavigateToShare(
-                        roomTitle?.trim(),
-                        false,
-                        false
-                      );
+                    } 
+                     else {
+                      // handleSSOLogin()
+                      history.push('/login')
                     }
                   }}
                 > 
@@ -180,11 +196,13 @@ const CustomCreate = () => {
                     fontStyle: 'normal',
                     fontWeight: '600',
                     lineHeight: 18,
-                  }}>{loading ? loadingText : 'Join Call'}</Text>
+                  }}>{loading ? loadingText : 'Sign in to Join Call'}</Text>
               </TouchableOpacity>
             </View>
         </View>
-      ) : (
+      ) 
+    }
+      {(roomCreated  && agentAuthToken) && (
         <Redirect to={host} />
       )}
     </>
