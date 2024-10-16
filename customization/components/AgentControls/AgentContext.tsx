@@ -26,6 +26,7 @@ export const AgentProvider: React.FC<{children: React.ReactNode}> = ({children})
         agentAuthToken,
         setAgentAuthToken
     }
+
     return (
         <AgentContext.Provider value={value}>
             {children}
