@@ -26,6 +26,30 @@ export const AgentProvider: React.FC<{children: React.ReactNode}> = ({children})
         agentAuthToken,
         setAgentAuthToken
     }
+
+  React.useEffect(() => {
+    // function redirecToCreate(ev) {
+    //     ev.preventDefault();
+    //     // window.setTimeout(function () { 
+    //     //   window.location.href = `${window.location.origin}/create`;
+    //     // }, 0);   
+    //     return false
+    //   }
+
+    // window.addEventListener(
+    //   'beforeunload',
+    //   redirecToCreate
+    // );
+
+    // // cleanup this component
+    // return () => {
+    //   window.removeEventListener(
+    //     'beforeunload',
+    //     redirecToCreate
+    //   );
+    // };
+  }, []);
+
     return (
         <AgentContext.Provider value={value}>
             {children}
