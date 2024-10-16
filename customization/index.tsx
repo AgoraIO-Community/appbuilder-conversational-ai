@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext} from "react";
 import RtcEngine from "bridge/rtc/webNg";
 import {ILocalAudioTrack, IRemoteAudioTrack} from 'agora-rtc-sdk-ng'
-import {  View, } from "react-native";
+import {  View,TouchableOpacity, Text } from "react-native";
 import {
 	customize,
 	MaxVideoView,
@@ -11,7 +11,9 @@ import {
 	useRtc,
 	useLocalAudio,
 	useIsAudioEnabled,
-	isMobileUA
+	isMobileUA,
+	ToolbarPreset,
+	useEndCall
 } from "customization-api";
 import AudioVisualizer, {
 	DisconnectedView,
@@ -29,9 +31,74 @@ import { AgentContext } from './components/AgentControls/AgentContext';
 import { AgentState } from './components/AgentControls/const'
 import CustomLoginRoute from "./routes/CustomLoginRoute";
 import CustomValidateRoute from "./routes/CustomValidateRoute";
+import {AGENT_PROXY_URL} from "./components/AgentControls/const";
+import Toast from "../react-native-toast-message/index";
+
 
 const Topbar = () => {
-	return null;
+	return <ToolbarPreset align="top" items={{
+		"meeting-title": {hide: true},
+		"participant-count": {hide:true},
+		"recording-status": {hide:true},
+		"chat": {hide:true},
+		"participant": {hide:true},
+		"settings": {hide:true},
+		"Logout": {
+			align:"end",
+			component: () => {
+				const {agentAuthToken, setAgentAuthToken} = useContext(AgentContext);
+				const endcall =  useEndCall();
+
+				const ssoLogout = async () => {
+					const logoutUrl = `${AGENT_PROXY_URL}/logout`
+
+					const response = await fetch(logoutUrl, {
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${agentAuthToken}`,
+						}
+					})
+
+					// if (!response.ok) {
+					// 	throw new Error(`HTTP error! status: ${response.status}`);
+					// }
+					await endcall()
+					setAgentAuthToken(null)
+
+					const data = await response.json();
+
+					console.log({logoutdata: data})
+
+					return data;
+
+				}
+				const logout = async () => {
+					try{
+						await ssoLogout()
+					}catch(error){
+						console.log({logoutFailed: error})
+					}
+				}
+
+
+				return <TouchableOpacity style={{
+					display: 'flex',
+					height: 35,
+					padding: 20,
+					justifyContent: 'space-between',
+					alignItems: 'center',
+					gap: 8,
+					borderRadius: 4, 
+					borderWidth: 1, 
+					borderColor: '#00C2FF',
+					flexDirection:'row',	
+				}}
+				onPress={logout}>
+					<Text style={{color: "#FFF"}}>Logout</Text>
+				</TouchableOpacity>
+			}
+		}
+	}}/>
 };
 
 const DesktopLayoutComponent: LayoutComponent = () => {
