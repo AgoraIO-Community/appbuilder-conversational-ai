@@ -43,11 +43,15 @@ export const AI_AGENT_UID = 123;
 // production router
 // export const AGENT_PROXY_URL = "https://agora-realtime-proxy-590d34bfeb04.herokuapp.com"
 // production sso
-// export const AGORA_SSO_LOGIN = 'https://sso2.agora.io/api/v0/oauth/authorize';
+// export const AGORA_SSO_BASE = 'https://sso2.agora.io';
 
 // staging router
 export const AGENT_PROXY_URL = "https://agora-realtime-proxy-dev-0af5192e12dd.herokuapp.com"
 // staging sso
-export const AGORA_SSO_LOGIN = 'https://staging-sso.agora.io/api/v0/oauth/authorize';
+export const AGORA_SSO_BASE = 'https://staging-sso.agora.io';
+
+export const AGORA_SSO_LOGIN_PATH = "/api/v0/oauth/authorize"
+
+export const AGORA_SSO_LOGOUT_PATH = "/api/v0/logout"
 
 export const AGORA_SSO_CLIENT_ID = 'openai_agora'; 

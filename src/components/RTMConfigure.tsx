@@ -112,32 +112,32 @@ const RtmConfigure = (props: any) => {
     );
   }, [defaultContent]);
 
-  React.useEffect(() => {
-    const handBrowserClose = ev => {
-      ev.preventDefault();
-      return false
-      return (ev.returnValue = 'Are you sure you want to exit?');
-    };
-    const logoutRtm = () => {
-      engine.current.leaveChannel(rtcProps.channel);
-    };
+  // React.useEffect(() => {
+  //   const handBrowserClose = ev => {
+  //     ev.preventDefault();
+  //     return false
+  //     return (ev.returnValue = 'Are you sure you want to exit?');
+  //   };
+  //   const logoutRtm = () => {
+  //     engine.current.leaveChannel(rtcProps.channel);
+  //   };
 
-    if (!isWebInternal()) return;
-    window.addEventListener(
-      'beforeunload',
-      isWeb() && !isSDK() ? handBrowserClose : () => {},
-    );
+  //   if (!isWebInternal()) return;
+  //   window.addEventListener(
+  //     'beforeunload',
+  //     isWeb() && !isSDK() ? handBrowserClose : () => {},
+  //   );
 
-    window.addEventListener('pagehide', logoutRtm);
-    // cleanup this component
-    return () => {
-      window.removeEventListener(
-        'beforeunload',
-        isWeb() && !isSDK() ? handBrowserClose : () => {},
-      );
-      window.removeEventListener('pagehide', logoutRtm);
-    };
-  }, []);
+  //   window.addEventListener('pagehide', logoutRtm);
+  //   // cleanup this component
+  //   return () => {
+  //     window.removeEventListener(
+  //       'beforeunload',
+  //       isWeb() && !isSDK() ? handBrowserClose : () => {},
+  //     );
+  //     window.removeEventListener('pagehide', logoutRtm);
+  //   };
+  // }, []);
 
   const doLoginAndSetupRTM = async () => {
     try {

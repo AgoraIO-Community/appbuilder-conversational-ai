@@ -31,8 +31,8 @@ import { AgentContext } from './components/AgentControls/AgentContext';
 import { AgentState } from './components/AgentControls/const'
 import CustomLoginRoute from "./routes/CustomLoginRoute";
 import CustomValidateRoute from "./routes/CustomValidateRoute";
-import {AGENT_PROXY_URL} from "./components/AgentControls/const";
 import Toast from "../react-native-toast-message/index";
+import {AGENT_PROXY_URL, AGORA_SSO_LOGOUT_PATH, AGORA_SSO_BASE} from "./components/AgentControls/const"
 
 
 const Topbar = () => {
@@ -74,7 +74,15 @@ const Topbar = () => {
 				}
 				const logout = async () => {
 					try{
-						await ssoLogout()
+						// await ssoLogout()
+						const originURL = window.location.origin+'/create'
+						const frontend_redirect_creds = {
+							token: agentAuthToken,
+							frontend_redirect: originURL
+						}
+						const REDIRECT_URL=`${AGENT_PROXY_URL}/logout?state=${JSON.stringify(frontend_redirect_creds)}`;
+						const ssoUrl = `${AGORA_SSO_BASE}/${AGORA_SSO_LOGOUT_PATH}?redirect_uri=${REDIRECT_URL}`;
+						console.log({REDIRECT_URL})
 					}catch(error){
 						console.log({logoutFailed: error})
 					}
