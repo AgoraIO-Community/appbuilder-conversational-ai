@@ -82,7 +82,8 @@ const Topbar = () => {
 						}
 						const REDIRECT_URL=`${AGENT_PROXY_URL}/logout?state=${JSON.stringify(frontend_redirect_creds)}`;
 						const ssoUrl = `${AGORA_SSO_BASE}/${AGORA_SSO_LOGOUT_PATH}?redirect_uri=${REDIRECT_URL}`;
-						console.log({REDIRECT_URL})
+						// console.log({REDIRECT_URL})
+						window.open(`${ssoUrl}`, "_self")
 					}catch(error){
 						console.log({logoutFailed: error})
 					}
