@@ -212,26 +212,6 @@ const customization = customize({
 			bottomToolBar: isMobileUA() ? MobileBottombar : Bottombar,
 		},
 	},
-  // customRoutes: [
-  //   {
-  //     path: '/login',
-  //     exact: true,
-  //     isPrivateRoute: false,
-  //     component: CustomLoginRoute,
-  //     componentProps: {
-  //       customData: '',
-  //     },
-  //   },
-  //   {
-  //     path: 'validate',
-  //     exact: true,
-  //     isPrivateRoute: true,
-  //     component: CustomValidateRoute,
-  //     componentProps: {
-  //       customData: '',
-  //     },
-  //   },
-  // ],
 });
 
 export { AI_AGENT_UID };
