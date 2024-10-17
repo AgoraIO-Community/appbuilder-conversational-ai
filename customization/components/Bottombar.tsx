@@ -47,7 +47,7 @@ const Bottombar = () => {
       <ToolbarPreset
         align="bottom"
         items={{
-          layout: { hide: true},
+          // layout: { hide: true},
           invite: { hide:true},
           more: {hide:true},
           "logo":{

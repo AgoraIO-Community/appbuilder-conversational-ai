@@ -41,14 +41,14 @@ export const AI_AGENT_UID = 123;
 // export const AGENT_PROXY_URL = "https://conversational-ai-agent-git-setmute-agoraio.vercel.app/api/proxy"
 
 // production router
-export const AGENT_PROXY_URL = "https://agora-realtime-proxy-590d34bfeb04.herokuapp.com"
+// export const AGENT_PROXY_URL = "https://agora-realtime-proxy-590d34bfeb04.herokuapp.com"
 // production sso
-export const AGORA_SSO_BASE = 'https://sso2.agora.io';
+// export const AGORA_SSO_BASE = 'https://sso2.agora.io';
 
 // staging router
-// export const AGENT_PROXY_URL = "https://agora-realtime-proxy-dev-0af5192e12dd.herokuapp.com"
+export const AGENT_PROXY_URL = "https://agora-realtime-proxy-dev-0af5192e12dd.herokuapp.com"
 // staging sso
-// export const AGORA_SSO_BASE = 'https://staging-sso.agora.io';
+export const AGORA_SSO_BASE = 'https://staging-sso.agora.io';
 
 export const AGORA_SSO_LOGIN_PATH = "/api/v0/oauth/authorize"
 

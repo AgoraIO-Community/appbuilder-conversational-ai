@@ -198,8 +198,9 @@ const customization = customize({
 		create: isMobileUA() ? CustomCreateNative : CustomCreate,
 		// preferenceWrapper: AgentProvider,
 		videoCall: {
-			customLayout() {
+			customLayout(defaultLayouts) {
 				return [
+					...defaultLayouts,
 					{
 						name: "Ai-Agent",
 						label: "Ai-Agent",
