@@ -1,5 +1,5 @@
 {
-  "APP_ID": "4a557de8696f44bd99c49f6ba74295ad",
+  "APP_ID": "efb556dd169b44a489f21f14e335abf9",
   "ENCRYPTION_ENABLED": false,
   "ENABLE_GOOGLE_OAUTH": false,
   "ENABLE_APPLE_OAUTH": false,
@@ -9,7 +9,7 @@
   "MICROSOFT_CLIENT_ID": "",
   "SLACK_CLIENT_ID": "",
   "APPLE_CLIENT_ID": "",
-  "PROJECT_ID": "e0bf98db264ab3a02e8f",
+  "PROJECT_ID": "ccdf39680efc3ed5da0e",
   "RECORDING_MODE": "MIX",
   "APP_CERTIFICATE": "",
   "CUSTOMER_ID": "",

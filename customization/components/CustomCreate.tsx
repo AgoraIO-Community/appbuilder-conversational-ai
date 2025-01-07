@@ -82,17 +82,17 @@ const CustomCreate = () => {
   }, [])
 
 
-  useEffect( () => {
-  // to check if user logged in quer param 
-  const queryParams = new URLSearchParams(window.location.search);
-    if (queryParams.get('auth') === 'success' && roomTitle != '') {
-      createRoomAndNavigateToShare(
-        roomTitle?.trim(),
-        false,
-        false
-      );
-      }
-  },[roomTitle])
+  // useEffect( () => {
+  // // to check if user logged in quer param 
+  // const queryParams = new URLSearchParams(window.location.search);
+  //   if (queryParams.get('auth') === 'success' && roomTitle != '') {
+  //     createRoomAndNavigateToShare(
+  //       roomTitle?.trim(),
+  //       false,
+  //       false
+  //     );
+  //     }
+  // },[roomTitle])
 
   const createRoomAndNavigateToShare = async (
     roomTitle: string,
@@ -154,7 +154,7 @@ const CustomCreate = () => {
 
   return (
     <>
-      {(!roomCreated  && !agentAuthToken) && (
+      {!roomCreated ? (
         <View style={style.root}>
             <View style={style.topLogoContainer}>
               <View style={{paddingTop: 14}}>
@@ -185,7 +185,12 @@ const CustomCreate = () => {
                     } 
                      else {
                       // handleSSOLogin()
-                      history.push('/login')
+                      //history.push('/login')
+                      createRoomAndNavigateToShare(
+                        roomTitle?.trim(),
+                        false,
+                        false
+                      );
                     }
                   }}
                 > 
@@ -200,9 +205,8 @@ const CustomCreate = () => {
               </TouchableOpacity>
             </View>
         </View>
-      ) 
-    }
-      {(roomCreated  && agentAuthToken) && (
+      ) :
+       (
         <Redirect to={host} />
       )}
     </>

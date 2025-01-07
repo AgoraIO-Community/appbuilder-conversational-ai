@@ -41,7 +41,7 @@ const Bottombar = () => {
   const { data } = useRoomInfo();
   const [clientId, setClientId] = useState<string | null>(null);
   useEffect(() => {
-    !isMobileUA() && setSidePanel(SidePanelType.Settings)
+    !isMobileUA() && setSidePanel('agent-transcript-panel')
   }, [])
   return (
       <ToolbarPreset

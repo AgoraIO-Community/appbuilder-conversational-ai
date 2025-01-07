@@ -7,14 +7,15 @@ import Toast from "../../../react-native-toast-message/index";
 import { isMobileUA, ThemeConfig, useContent, useEndCall } from "customization-api";
 import { CallIcon, EndCall } from '../icons';
 import { useHistory} from '../../../src/components/Router';
+import StorageContext from '../../../src/components/StorageContext';
 
 const connectToAIAgent = async (
-  agentAction: 'start_agent' | 'stop_agent', 
+  agentAction: 'start' | 'stop', 
   channel_name: string,
   clientId:string,agentAuthToken:string): Promise<string | void> => {
 
     // const apiUrl = '/api/proxy'; 
-    const apiUrl = AGENT_PROXY_URL; 
+    const apiUrl = $config.BACKEND_ENDPOINT +'/v1/convoai'; 
     const requestBody = {
       // action: agentAction, 
       channel_name: channel_name,
@@ -23,10 +24,11 @@ const connectToAIAgent = async (
     console.log({requestBody})
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${agentAuthToken}`,
+      'Authorization': `Bearer ${agentAuthToken}`
+   
     };
 
-    if (agentAction === 'stop_agent' && clientId) {
+    if (agentAction === 'stop' && clientId) {
         headers['X-Client-ID'] = clientId;
     }
 
@@ -35,8 +37,6 @@ const connectToAIAgent = async (
         method: 'POST',
         headers: headers,
         body: JSON.stringify(requestBody),
-        mode: 'cors', 
-        credentials: 'include' 
       });
   
       if (!response.ok) {
@@ -47,11 +47,11 @@ const connectToAIAgent = async (
 
       // console.log({data}, "X-Client-ID start stop")
       console.log(
-        `AI agent ${agentAction === 'start_agent' ? 'connected' : 'disconnected'}`,
+        `AI agent ${agentAction === 'start' ? 'connected' : 'disconnected'}`,
         data
       );
-      if (agentAction === 'start_agent' && data.clientID) {
-        return data.clientID;
+      if (agentAction === 'start' && data.agent_id) {
+        return data.agent_id;
       }
     } catch (error) {
       console.error(`Failed to ${agentAction} AI agent connection:`, error);
@@ -66,6 +66,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
     const {  activeUids:users } = useContent();
     const endcall =  useEndCall();
     const history = useHistory()
+    const {store} = React.useContext(StorageContext);
     
     // stop_agent API is successful, but agent has not yet left the RTC channel
     const isAwaitingLeave = agentConnectionState === AgentState.AWAITING_LEAVE
@@ -83,7 +84,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
           ){
             try{
               setAgentConnectionState(AgentState.REQUEST_SENT);
-              const newClientId = await connectToAIAgent('start_agent', channel_name,'',agentAuthToken);
+              const newClientId = await connectToAIAgent('start', channel_name,'',store.token);
               // console.log("response X-Client-ID", newClientId, typeof newClientId)
               if(typeof newClientId === 'string'){
                 setClientId(newClientId);
@@ -114,7 +115,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
               Toast.show({
                 leadingIconName: 'alert',
                 type: 'error',
-                text1: "Your session is expired. Please sing in to join call.",
+                text1: "Your session is expired. Please sign in to join call.",
                 text2: null,
                 visibilityTime: 5000,
                 primaryBtn: null,
@@ -154,7 +155,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             }
             try{
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_REQUEST);
-              await connectToAIAgent('stop_agent', channel_name, clientId || undefined, agentAuthToken);
+              await connectToAIAgent('stop', channel_name, clientId || undefined, store.token);
               setAgentConnectionState(AgentState.AWAITING_LEAVE);
               // toast({ title: "Agent disconnecting..."})
               Toast.show({
