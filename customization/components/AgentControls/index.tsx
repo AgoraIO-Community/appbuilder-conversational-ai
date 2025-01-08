@@ -1,10 +1,10 @@
 import React, { useContext, useEffect,useState } from 'react';
-import { AI_AGENT_STATE, AIAgentState, AgentState, AI_AGENT_UID, AGENT_PROXY_URL} from "./const"
+import { AI_AGENT_STATE, AIAgentState, AgentState, AGENT_PROXY_URL} from "./const"
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { AgentContext } from './AgentContext';
 import Toast from "../../../react-native-toast-message/index";
 
-import { isMobileUA, ThemeConfig, useContent, useEndCall } from "customization-api";
+import { isMobileUA, ThemeConfig, UidType, useContent, useEndCall, useLocalUid } from "customization-api";
 import { CallIcon, EndCall } from '../icons';
 import { useHistory} from '../../../src/components/Router';
 import StorageContext from '../../../src/components/StorageContext';
@@ -12,14 +12,18 @@ import StorageContext from '../../../src/components/StorageContext';
 const connectToAIAgent = async (
   agentAction: 'start' | 'stop', 
   channel_name: string,
-  clientId:string,agentAuthToken:string): Promise<string | void> => {
+  clientId:string,
+  localUid:UidType,
+  agentAuthToken:string): Promise<{}> => {
 
     // const apiUrl = '/api/proxy'; 
     const apiUrl = $config.BACKEND_ENDPOINT +'/v1/convoai'; 
-    const requestBody = {
+    const requestBody = agentAction === 'start' ? {
       // action: agentAction, 
       channel_name: channel_name,
-      uid: AI_AGENT_UID
+      uid: localUid // user uid // localUid or 0
+    } : {
+      agent_id:clientId
     };
     console.log({requestBody})
     const headers: HeadersInit = {
@@ -28,9 +32,7 @@ const connectToAIAgent = async (
    
     };
 
-    if (agentAction === 'stop' && clientId) {
-        headers['X-Client-ID'] = clientId;
-    }
+
 
     try {
       const response = await fetch(`${apiUrl}/${agentAction}`, {
@@ -50,8 +52,8 @@ const connectToAIAgent = async (
         `AI agent ${agentAction === 'start' ? 'connected' : 'disconnected'}`,
         data
       );
-      if (agentAction === 'start' && data.agent_id) {
-        return data.agent_id;
+      if (agentAction === 'start') {
+        return data;
       }
     } catch (error) {
       console.error(`Failed to ${agentAction} AI agent connection:`, error);
@@ -59,14 +61,16 @@ const connectToAIAgent = async (
     }
 };
 
-export const AgentControl: React.FC<{channel_name: string, style: object, clientId: string, setClientId: () => void}> = ({channel_name,style,clientId,setClientId}) => {
-    const {agentConnectionState, setAgentConnectionState,agentAuthToken, setAgentAuthToken} = useContext(AgentContext);
+export const AgentControl: React.FC<{channel_name: string, style: object, clientId: string, setClientId: (id:string) => void}> = ({channel_name,style,clientId,setClientId}) => {
+    const {agentConnectionState, setAgentConnectionState,agentAuthToken, setAgentAuthToken,agentUID,setAgentUID} = useContext(AgentContext);
     // console.log("X-Client-ID state", clientId)
     // const { users } = useContext(UserContext)
-    const {  activeUids:users } = useContent();
+    const {  activeUids:users,defaultContent } = useContent();
     const endcall =  useEndCall();
     const history = useHistory()
     const {store} = React.useContext(StorageContext);
+    const localUid = useLocalUid();
+ 
     
     // stop_agent API is successful, but agent has not yet left the RTC channel
     const isAwaitingLeave = agentConnectionState === AgentState.AWAITING_LEAVE
@@ -84,11 +88,14 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
           ){
             try{
               setAgentConnectionState(AgentState.REQUEST_SENT);
-              const newClientId = await connectToAIAgent('start', channel_name,'',store.token);
+              const data = await connectToAIAgent('start', channel_name,'',localUid,store.token);
               // console.log("response X-Client-ID", newClientId, typeof newClientId)
-              if(typeof newClientId === 'string'){
-                setClientId(newClientId);
-              }
+              // @ts-ignore
+              const {agent_id = null,agent_uid=null} = data;
+         
+                setClientId(agent_id);
+                setAgentUID(agent_uid)
+              
               setAgentConnectionState(AgentState.AWAITING_JOIN);
             //   toast({title: "Agent requested to join"})
 
@@ -155,7 +162,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
             }
             try{
               setAgentConnectionState(AgentState.AGENT_DISCONNECT_REQUEST);
-              await connectToAIAgent('stop', channel_name, clientId || undefined, store.token);
+              await connectToAIAgent('stop', channel_name, clientId || undefined,localUid, store.token);
               setAgentConnectionState(AgentState.AWAITING_LEAVE);
               // toast({ title: "Agent disconnecting..."})
               Toast.show({
@@ -199,7 +206,7 @@ export const AgentControl: React.FC<{channel_name: string, style: object, client
       useEffect(() => {
         console.log("agent contrl", {users})
         // welcome agent
-        const aiAgentUID = users.filter((item) => item === AI_AGENT_UID);
+        const aiAgentUID = users.filter((item) => item === agentUID);
           if(aiAgentUID.length && agentConnectionState === AgentState.AWAITING_JOIN){
             setAgentConnectionState(AgentState.AGENT_CONNECTED);
             // toast({title: "Say Hi!!"})

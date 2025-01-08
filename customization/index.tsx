@@ -24,7 +24,6 @@ import AudioVisualizer, {
 import Bottombar from './components/Bottombar'
 import CustomCreate from './components/CustomCreate'
 import CustomCreateNative from './components/CustomCreateNative'
-import {AI_AGENT_UID} from "./components/AgentControls/const"
 import {ActiveSpeakerAnimation } from "./components/LocalAudioWave"
 import MobileTopBar from './components/mobile/Topbar'
 import MobileLayoutComponent from "./components/mobile/MobileLayoutComponent";
@@ -148,12 +147,14 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 	const { RtcEngineUnsafe } = useRtc();
     const [localTracks, setLocalTrack] = useState<ILocalAudioTrack | null>(null);
 	const [remoteTrack, setRemoteTrack] = useState<IRemoteAudioTrack | null>(null);
+	
+	const {agentConnectionState, setAgentConnectionState,agentUID} = useContext(AgentContext);
 
 	const { getLocalAudioStream,getRemoteAudioStream} = useLocalAudio();
 	const isAudioEnabled = useIsAudioEnabled();
-	const connected = activeUids.includes(AI_AGENT_UID);
+	const connected = activeUids.includes(agentUID);
 	console.log({ activeUids }, "active uids");
-	const {agentConnectionState, setAgentConnectionState} = useContext(AgentContext);
+	
 
 	// this state occurs when agent_stop is successful, but
 	// user is still not disconnected from the RTC channel - state-of-wait
@@ -166,8 +167,8 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 	}, [RtcEngineUnsafe])
 
 	useEffect(() => {
-		if(getRemoteAudioStream(AI_AGENT_UID)){
-			setRemoteTrack(getRemoteAudioStream(AI_AGENT_UID))
+		if(getRemoteAudioStream(agentUID)){
+			setRemoteTrack(getRemoteAudioStream(agentUID))
 		}
 		
 	}, [activeUids])
@@ -184,7 +185,7 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 		>
 			<MaxVideoView
 				user={{
-					...defaultContent[AI_AGENT_UID],
+					...defaultContent[agentUID],
 					name: "OpenAI",
 					video: false,
 				}}
@@ -375,7 +376,7 @@ const customization = customize({
 	},
 });
 
-export { AI_AGENT_UID };
+
 export default customization;
 
 const styles = StyleSheet.create({

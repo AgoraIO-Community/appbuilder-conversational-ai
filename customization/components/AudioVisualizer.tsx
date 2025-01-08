@@ -1,5 +1,4 @@
 import RtcEngine from "bridge/rtc/webNg";
-import { AI_AGENT_UID } from "..";
 import { isMobileUA, useContent, useLocalUid, useRtc } from "customization-api";
 import React, { useEffect, useRef } from "react";
 import { Text, View } from "react-native";

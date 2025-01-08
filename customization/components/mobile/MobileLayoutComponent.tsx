@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
 import { ILocalAudioTrack,IRemoteAudioTrack } from 'agora-rtc-sdk-ng';
 import {
@@ -11,8 +11,9 @@ import {
     useIsAudioEnabled,
 } from "customization-api";
 import AudioVisualizer, { DisconnectedView } from "../AudioVisualizer";
-import { AI_AGENT_UID } from "../AgentControls/const";
+
 import {ActiveSpeakerAnimation } from "../../components/LocalAudioWave"
+import { AgentContext } from "../AgentControls/AgentContext";
 
 const MobileLayoutComponent: LayoutComponent = () => {
 	const localUid = useLocalUid();
@@ -20,10 +21,11 @@ const MobileLayoutComponent: LayoutComponent = () => {
 	const { RtcEngineUnsafe } = useRtc();
     const [localTracks, setLocalTrack] = useState<ILocalAudioTrack | null>(null);
     const [remoteTrack, setRemoteTrack] = useState<IRemoteAudioTrack | null>(null);
+	const {agentUID} = useContext(AgentContext)
 
 	const { getLocalAudioStream,getRemoteAudioStream} = useLocalAudio();
 	const isAudioEnabled = useIsAudioEnabled();
-	const connected = activeUids.includes(AI_AGENT_UID);
+	const connected = activeUids.includes(agentUID);
 	console.log({ activeUids }, "active uids");
 
 	useEffect(() => {
@@ -37,8 +39,8 @@ const MobileLayoutComponent: LayoutComponent = () => {
 	}, [isAudioEnabled])
 
     useEffect(() => {
-		if(getRemoteAudioStream(AI_AGENT_UID)){
-			setRemoteTrack(getRemoteAudioStream(AI_AGENT_UID))
+		if(getRemoteAudioStream(agentUID)){
+			setRemoteTrack(getRemoteAudioStream(agentUID))
 		}
 		
 	}, [activeUids])
@@ -56,7 +58,7 @@ const MobileLayoutComponent: LayoutComponent = () => {
 				containerStyle={{borderRadius:12, borderWidth:0}}
 				innerContainerStyle={{backgroundColor: '#222'}}
 				user={{
-					...defaultContent[AI_AGENT_UID],
+					...defaultContent[agentUID],
 					name: "OpenAI",
 					video: false,
 				}}
