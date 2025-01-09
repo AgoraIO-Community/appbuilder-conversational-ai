@@ -24,7 +24,7 @@ import AudioVisualizer, {
 import Bottombar from './components/Bottombar'
 import CustomCreate from './components/CustomCreate'
 import CustomCreateNative from './components/CustomCreateNative'
-import {ActiveSpeakerAnimation } from "./components/LocalAudioWave"
+import {ActiveSpeakerAnimation, AudioVisualizerEffect } from "./components/LocalAudioWave"
 import MobileTopBar from './components/mobile/Topbar'
 import MobileLayoutComponent from "./components/mobile/MobileLayoutComponent";
 import MobileBottombar from './components/mobile/Bottombar'
@@ -35,6 +35,7 @@ import CustomLoginRoute from "./routes/CustomLoginRoute";
 import CustomValidateRoute from "./routes/CustomValidateRoute";
 import Toast from "../react-native-toast-message/index";
 import {AGENT_PROXY_URL, AGORA_SSO_LOGOUT_PATH, AGORA_SSO_BASE} from "./components/AgentControls/const"
+import { useMultibandTrackVolume } from "./utils";
 
 
 const Topbar = () => {
@@ -147,6 +148,8 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 	const { RtcEngineUnsafe } = useRtc();
     const [localTracks, setLocalTrack] = useState<ILocalAudioTrack | null>(null);
 	const [remoteTrack, setRemoteTrack] = useState<IRemoteAudioTrack | null>(null);
+	const [mediaStreamTrack, setMediaStreamTrack] =
+    React.useState<MediaStreamTrack>()
 	
 	const {agentConnectionState, setAgentConnectionState,agentUID} = useContext(AgentContext);
 
@@ -163,6 +166,7 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 	useEffect(() => {
 		if(getLocalAudioStream()){
 			setLocalTrack(getLocalAudioStream())
+
 		}
 	}, [RtcEngineUnsafe])
 
@@ -172,8 +176,7 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 		}
 		
 	}, [activeUids])
-
-
+	
 	return (
 		<View
 			style={{
@@ -209,15 +212,20 @@ const DesktopLayoutComponent: LayoutComponent = () => {
 				<MaxVideoView user={defaultContent[localUid]} hideMenuOptions={true} />
 				<View style={{
 					position:"absolute",
-					width:100,
-					height:50,
 					bottom:16,
-					right:-38,
+					right:10,
 				}}>
 				{
 				localTracks && 
-				isAudioEnabled(localUid) &&
-				<ActiveSpeakerAnimation audioTrack={localTracks} isMuted={!isAudioEnabled(localUid)} />     
+			
+				<AudioVisualizerEffect  type="user"
+					barWidth={3}
+					minBarHeight={2}
+					maxBarHeight={25}
+					audioTrack={localTracks}
+					borderRadius={2}
+					gap={4}/>  
+				 
 				}
 				</View>
 			</View>
