@@ -71,8 +71,7 @@ const Bottombar = () => {
           "connect-agent": {
             align: "end",
             label: 'Agent',
-            component: () =>  <AgentControl channel_name={data.channel}   clientId={clientId} 
-            setClientId={setClientId} />,
+            component: () =>  <AgentControl channel_name={data.channel}/>,
             order: 3
           },
           'local-audio':{ align: 'end', order: 1},
