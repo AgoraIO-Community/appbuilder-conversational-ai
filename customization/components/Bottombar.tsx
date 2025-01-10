@@ -24,7 +24,7 @@ export const LogoComponent = () => {
         lineHeight: 18, 
         fontFamily: ThemeConfig.FontFamily.sansPro
       }}>
-        Agora & OpenAI Conversational AI Demo
+        AI Builder Demo
       </Text>
     </View>
   )

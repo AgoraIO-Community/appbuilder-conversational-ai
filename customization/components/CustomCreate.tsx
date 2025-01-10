@@ -164,15 +164,14 @@ const CustomCreate = () => {
                 <OpenAILogo />
               </View>
             </View>
-            <View style={{ width:456, marginTop:90, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ width:490, marginTop:90, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
               <View style={style.centerLogoContainer}>
                   <View style={{padding: 20}}>
                     <AgoraOpenAILogo />
                   </View>
-                  <Text style={style.mainTextStyle}>Agora & OpenAI</Text>
+                  <Text style={style.mainTextStyle}>Agora & Conversational AI</Text>
                   <Spacer size={20} />
-                  <Text style={style.subTextStyle}>Agora Conversational AI demo</Text>
-                  <Text style={style.subTextStyle}>built in partnership with OpenAI</Text>
+                  <Text style={style.subTextStyle}>AI Builder Conversational AI demo</Text>
               </View>
               <Spacer size={20} />
               <TouchableOpacity
