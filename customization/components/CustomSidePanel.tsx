@@ -2,10 +2,11 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {useContext} from 'react';
 import {useRtc} from 'customization-api';
 import {AgentContext} from './AgentControls/AgentContext';
+import ChatScreen from './agent-chat-panel/agent-chat-ui';
 
 const CustomSidePanel = () => {
   const {RtcEngineUnsafe} = useRtc();
-  const {isSubscribedForStreams, setIsSubscribedForStreams} =
+  const {isSubscribedForStreams, setIsSubscribedForStreams, addChatItem} =
     useContext(AgentContext);
 
   const messageCache = {};
@@ -80,16 +81,18 @@ const CustomSidePanel = () => {
           atob(completeMessage),
         );
         const textItem = {
-          uid: `${stream_id}`,
+          uid: stream_id,
           time: text_ts,
           dataType: 'transcribe',
           text: text,
           isFinal: is_final,
+          isSelf: stream_id === 0 ? false : true,
         };
 
         if (text.trim().length > 0) {
           //this.emit("textChanged", textItem);
           console.warn('emit textChanged: ', textItem);
+          addChatItem(textItem);
         }
 
         // Clean up the cache
@@ -110,11 +113,7 @@ const CustomSidePanel = () => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.textContainer}>
-        <div style={styles.textStyle}>
-          Here is your new custom side panel component.
-        </div>
-      </div>
+      <ChatScreen />
     </div>
   );
 };
@@ -124,20 +123,7 @@ export default CustomSidePanel;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#90EE90',
-    justifyContent: 'center',
-    display: 'flex',
-  },
-  textContainer: {
     display: 'flex',
     height: '100%',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 30,
-  },
-  textStyle: {
-    padding: 10,
-    fontSize: 20,
-    alignSelf: 'center',
   },
 });
