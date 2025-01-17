@@ -77,10 +77,16 @@ const CustomSidePanel = () => {
       // If all parts are received, reconstruct the message
       if (messageCache[message_id].length === total_parts) {
         const completeMessage = reconstructMessage(messageCache[message_id]);
-        const {stream_id, is_final, text, text_ts} = JSON.parse(
-          atob(completeMessage),
-        );
+        const data = atob(completeMessage);
+        const {stream_id, is_final, text, text_ts} = JSON.parse(data);
+        /** Data type of above object
+         * stream_id: number
+         * is_final: boolean
+         * text: string
+         * text_ts: number
+         */
         const textItem = {
+          id: message_id,
           uid: stream_id,
           time: text_ts,
           dataType: 'transcribe',

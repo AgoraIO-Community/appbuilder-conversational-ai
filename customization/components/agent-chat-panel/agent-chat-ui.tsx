@@ -1,19 +1,22 @@
 import React, {useContext} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {AgentContext} from '../AgentControls/AgentContext'; // Ensure the path matches your project structure
+import {FlatList, StyleSheet, View} from 'react-native';
+import {AgentContext, ChatItem} from '../AgentControls/AgentContext'; // Ensure the path matches your project structure
+import {ChatBubble, ChatMessageType} from 'customization-api';
 
 // ChatItem Component
-const ChatItem = ({item}) => {
-  const isSelf = item.isSelf;
-
+const ChatItemBubble = ({item}: {item: ChatItem}) => {
   return (
-    <View
-      style={[
-        styles.chatBubble,
-        isSelf ? styles.selfBubble : styles.otherBubble,
-      ]}>
-      <Text style={styles.chatText}>{item.text}</Text>
-    </View>
+    <ChatBubble
+      key={item.id}
+      msgId={item.id}
+      isLocal={item.isSelf}
+      message={item.text}
+      createdTimestamp={`${item.time}`}
+      uid={item.uid}
+      isDeleted={false}
+      isSameUser={false}
+      type={ChatMessageType.TXT}
+    />
   );
 };
 
@@ -26,7 +29,7 @@ const ChatScreen = () => {
       <FlatList
         data={chatItems}
         keyExtractor={item => `${item.uid}`}
-        renderItem={({item}) => <ChatItem item={item} />}
+        renderItem={({item}) => <ChatItemBubble item={item} />}
         contentContainerStyle={styles.chatList}
       />
     </View>

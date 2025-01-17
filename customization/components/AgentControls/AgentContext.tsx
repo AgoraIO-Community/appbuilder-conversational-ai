@@ -3,6 +3,7 @@ import {AIAgentState, AgentState} from './const';
 import {UidType} from 'customization-api';
 
 export interface ChatItem {
+  id: string;
   uid: UidType;
   text: string;
   isFinal: boolean;
