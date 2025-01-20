@@ -209,7 +209,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
             marginHorizontal: 12,
           }}>
           <View style={{marginRight: 5}}>
-            {remoteUIConfig?.avatarIcon && (
+            {!isLocal && remoteUIConfig?.avatarIcon && (
               <ImageIcon
                 iconType="plain"
                 iconSize={24}
