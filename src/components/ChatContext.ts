@@ -13,6 +13,7 @@ import RtmEngine from 'agora-react-native-rtm';
 import {UidType} from '../../agora-rn-uikit';
 import {createContext, SetStateAction} from 'react';
 import {ChatMessageType} from './chat-messages/useChatMessages';
+import {ViewStyle} from 'react-native';
 
 export interface ChatBubbleProps {
   isLocal: boolean;
@@ -29,6 +30,12 @@ export interface ChatBubbleProps {
   fileName?: string;
   ext?: string;
   previousMessageCreatedTimestamp?: string;
+  remoteUIConfig?: {
+    username?: string; // Custom username for remote user
+    avatarIcon?: string;
+    bubbleStyleLayer1?: ViewStyle;
+    bubbleStyleLayer2?: ViewStyle;
+  };
 
   render?: (
     isLocal: boolean,

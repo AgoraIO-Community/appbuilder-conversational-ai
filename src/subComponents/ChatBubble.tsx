@@ -111,6 +111,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
 
   let {
     isLocal,
+    remoteUIConfig,
     isSameUser,
     message,
     createdTimestamp,
@@ -165,6 +166,18 @@ const ChatBubble = (props: ChatBubbleProps) => {
   //const remoteUserDefaultLabel = useString('remoteUserDefaultLabel')();
   const remoteUserDefaultLabel = useString(videoRoomUserFallbackText)();
 
+  const getUsername = () => {
+    if (isLocal) {
+      return 'You';
+    }
+    if (remoteUIConfig?.username) {
+      return trimText(remoteUIConfig?.username);
+    }
+    return defaultContent[uid]?.name
+      ? trimText(defaultContent[uid].name)
+      : remoteUserDefaultLabel;
+  };
+
   return props?.render ? (
     props.render(
       isLocal,
@@ -190,17 +203,21 @@ const ChatBubble = (props: ChatBubbleProps) => {
           style={{
             flexDirection: 'row',
             justifyContent: isLocal ? 'flex-end' : 'flex-start',
+            alignItems: 'center',
             marginBottom: 4,
             marginTop: 16,
             marginHorizontal: 12,
           }}>
-          <Text style={style.userNameStyle}>
-            {isLocal
-              ? 'You'
-              : defaultContent[uid]?.name
-              ? trimText(defaultContent[uid].name)
-              : remoteUserDefaultLabel}
-          </Text>
+          <View style={{marginRight: 5}}>
+            {!isLocal && remoteUIConfig?.avatarIcon && (
+              <ImageIcon
+                iconType="plain"
+                iconSize={24}
+                icon={remoteUIConfig?.avatarIcon}
+              />
+            )}
+          </View>
+          <Text style={style.userNameStyle}>{getUsername()}</Text>
           <Text style={style.timestampStyle}>{time}</Text>
         </View>
       ) : (!isSameUser || forceShowUserNameandTimeStamp) &&
@@ -221,14 +238,22 @@ const ChatBubble = (props: ChatBubbleProps) => {
       )}
       <View
         style={[
-          isLocal ? style.chatBubbleLocalView : style.chatBubbleRemoteView,
+          isLocal
+            ? style.chatBubbleLocalView
+            : {
+                ...style.chatBubbleRemoteView,
+                ...(remoteUIConfig?.bubbleStyleLayer1 || {}),
+              },
           //isURL(message) ? {maxWidth: '88%'} : {},
         ]}>
         <View
           style={[
             isLocal
               ? style.chatBubbleLocalViewLayer2
-              : style.chatBubbleRemoteViewLayer2,
+              : {
+                  ...style.chatBubbleRemoteViewLayer2,
+                  ...(remoteUIConfig?.bubbleStyleLayer2 || {}),
+                },
             type === ChatMessageType.IMAGE && style.chatBubbleViewImg,
           ]}>
           {isDeleted ? (
@@ -244,7 +269,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
                   style.messageStyle,
                   {color: $config.SEMANTIC_NEUTRAL, marginLeft: 5},
                 ]}>
-                {chatMsgDeletedTxt(isLocal ? 'You' : defaultContent[uid]?.name)}
+                {chatMsgDeletedTxt(getUsername())}
               </Text>
             </View>
           ) : (
@@ -301,7 +326,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
                       imageUrl={url}
                       msgId={msgId}
                       fileName={fileName}
-                      senderName={isLocal ? 'You' : defaultContent[uid]?.name}
+                      senderName={getUsername()}
                       timestamp={createdTimestamp}
                       isLocal={isLocal}
                     />
