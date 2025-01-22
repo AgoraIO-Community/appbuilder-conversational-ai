@@ -1,5 +1,18 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {IMicrophoneAudioTrack, IRemoteAudioTrack, ILocalAudioTrack} from "agora-rtc-sdk-ng";
+import { useMultibandTrackVolume } from '../../customization/utils';
+import { View, StyleSheet } from 'react-native';
+
+
+export interface AudioVisualizerProps {
+  type: "agent" | "user"
+  gap: number
+  barWidth: number
+  minBarHeight: number
+  maxBarHeight: number
+  borderRadius: number,
+  audioTrack:ILocalAudioTrack|IRemoteAudioTrack
+}
 
 
 export const ActiveSpeakerAnimation = ({ audioTrack, isMuted }: { audioTrack: ILocalAudioTrack | IRemoteAudioTrack | null, isMuted: boolean }) => {
@@ -99,4 +112,53 @@ export const ActiveSpeakerAnimation = ({ audioTrack, isMuted }: { audioTrack: IL
       <canvas ref={canvasRef} className="left-1/2 transform -translate-x-1/2 w-1/4 h-16" />
     );
   };
+
+export const  AudioVisualizerEffect =(props: AudioVisualizerProps) =>{
+  const {
+    gap,
+    barWidth,
+    minBarHeight,
+    maxBarHeight,
+    borderRadius,
+    type,
+    audioTrack
+  } = props
+
+  const mediaStreamTrack = audioTrack?.getMediaStreamTrack()
+  const frequencies = useMultibandTrackVolume(mediaStreamTrack, 10)
+
+  const summedFrequencies = frequencies.map((bandFrequencies) => {
+    const sum = bandFrequencies.reduce((a, b) => a + b, 0)
+    if (sum <= 0) {
+      return 0
+    }
+    return Math.sqrt(sum / bandFrequencies.length)
+  })
+
+  return (
+    <View style={[styles.container, { gap }]}>
+    {summedFrequencies.map((frequency, index) => {
+      const barHeight = minBarHeight + frequency * (maxBarHeight - minBarHeight);
+      const style = {
+        height: barHeight,
+        width: barWidth,
+        borderRadius: borderRadius,
+        backgroundColor: type === 'agent' ? '#0888FF' : '#EAECF0',
+      };
+      return <View key={index} style={style} />;
+    })}
+  </View>
+);
+  
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+  
   

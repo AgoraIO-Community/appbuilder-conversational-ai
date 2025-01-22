@@ -24,7 +24,7 @@ export const LogoComponent = () => {
         lineHeight: 18, 
         fontFamily: ThemeConfig.FontFamily.sansPro
       }}>
-        Agora & OpenAI Conversational AI Demo
+        AI Builder Demo
       </Text>
     </View>
   )
@@ -41,7 +41,7 @@ const Bottombar = () => {
   const { data } = useRoomInfo();
   const [clientId, setClientId] = useState<string | null>(null);
   useEffect(() => {
-    !isMobileUA() && setSidePanel(SidePanelType.Settings)
+    !isMobileUA() && setSidePanel('agent-transcript-panel')
   }, [])
   return (
       <ToolbarPreset
@@ -71,8 +71,7 @@ const Bottombar = () => {
           "connect-agent": {
             align: "end",
             label: 'Agent',
-            component: () =>  <AgentControl channel_name={data.channel}   clientId={clientId} 
-            setClientId={setClientId} />,
+            component: () =>  <AgentControl channel_name={data.channel}/>,
             order: 3
           },
           'local-audio':{ align: 'end', order: 1},

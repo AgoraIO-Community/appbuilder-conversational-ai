@@ -33,7 +33,7 @@ export const enum AgentState {
 
 }
 
-export const AI_AGENT_UID = 123;
+export const AI_AGENT_UID = 123456;
 
 // export const AGENT_PROXY_URL = "http://localhost:3000/api/proxy"
 // export const AGENT_PROXY_URL = "https://conversational-ai-agent-git-testing-cors-agoraio.vercel.app/api/proxy"
